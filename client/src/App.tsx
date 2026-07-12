@@ -8,6 +8,7 @@ import DashboardPage from "./features/dashboard/DashboardPage";
 import { MasterDataPage } from "./features/master/MasterDataPage";
 import { departmentsConfig } from "./features/master/configs/departments";
 import { categoriesConfig } from "./features/master/configs/categories";
+import SettingsPage from "./features/settings/SettingsPage";
 
 export default function App() {
   return (
@@ -36,6 +37,7 @@ export default function App() {
                 path="/categories"
                 element={<MasterDataPage config={categoriesConfig} />}
               />
+              <Route path="/settings" element={<SettingsPage />} />
             </Route>
           </Route>
 
