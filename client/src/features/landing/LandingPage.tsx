@@ -107,12 +107,28 @@ export function HeroSection() {
               {/* Mock UI Content */}
               <div className="flex flex-1 p-6 gap-6 bg-[#f8fafc]">
                 {/* Sidebar */}
-                <div className="hidden sm:flex flex-col w-48 gap-3">
-                  <div className="h-8 w-2/3 bg-gray-200 rounded-md mb-4"></div>
-                  <div className="h-4 w-full bg-green-100 rounded-md"></div>
-                  <div className="h-4 w-5/6 bg-gray-200 rounded-md"></div>
-                  <div className="h-4 w-4/5 bg-gray-200 rounded-md"></div>
-                  <div className="h-4 w-full bg-gray-200 rounded-md"></div>
+                <div className="hidden sm:flex flex-col w-48 gap-4 pt-2">
+                  <div className="flex items-center gap-2 px-3 mb-4">
+                    <Leaf className="h-5 w-5 text-green-600" />
+                    <span className="font-bold text-gray-900 text-sm">EcoSphere</span>
+                  </div>
+                  <nav className="flex flex-col gap-1">
+                    <div className="flex items-center gap-2 px-3 py-2 bg-green-50 text-green-700 rounded-lg text-xs font-semibold">
+                      <BarChart3 className="h-4 w-4" /> Dashboard
+                    </div>
+                    <div className="flex items-center gap-2 px-3 py-2 text-gray-500 hover:bg-gray-100 rounded-lg text-xs font-medium transition-colors">
+                      <Globe2 className="h-4 w-4" /> Environmental
+                    </div>
+                    <div className="flex items-center gap-2 px-3 py-2 text-gray-500 hover:bg-gray-100 rounded-lg text-xs font-medium transition-colors">
+                      <Users className="h-4 w-4" /> Social
+                    </div>
+                    <div className="flex items-center gap-2 px-3 py-2 text-gray-500 hover:bg-gray-100 rounded-lg text-xs font-medium transition-colors">
+                      <ShieldCheck className="h-4 w-4" /> Governance
+                    </div>
+                    <div className="flex items-center gap-2 px-3 py-2 text-gray-500 hover:bg-gray-100 rounded-lg text-xs font-medium transition-colors mt-4">
+                      <Trophy className="h-4 w-4" /> Leaderboard
+                    </div>
+                  </nav>
                 </div>
                 {/* Main Content Area */}
                 <div className="flex-1 flex flex-col gap-6">

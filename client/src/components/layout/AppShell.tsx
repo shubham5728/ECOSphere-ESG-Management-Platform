@@ -1,5 +1,40 @@
 import { useMemo, useState } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
+import {
+  LayoutDashboard,
+  Globe,
+  Factory,
+  ClipboardList,
+  HeartHandshake,
+  Trees,
+  ClipboardCheck,
+  TrendingUp,
+  Scale,
+  FileSignature,
+  FileSearch,
+  ShieldAlert,
+  Trophy,
+  Target,
+  Gift,
+  Sparkles,
+  Gauge,
+  BarChart3,
+  Wrench,
+  Building2,
+  Tags,
+  Users,
+  Zap,
+  ScrollText,
+  Award,
+  Package,
+  Settings,
+  Leaf,
+  Menu,
+  X,
+  LogOut,
+  ChevronRight,
+  type LucideIcon,
+} from "lucide-react";
 import { useAuth } from "../../store/AuthContext";
 import { NotificationBell } from "../notifications/NotificationBell";
 import type { Role } from "../../types";
@@ -8,13 +43,13 @@ import "./AppShell.css";
 interface NavItem {
   label: string;
   to: string;
-  icon: string;
+  icon: LucideIcon;
   roles?: Role[];
 }
 
 interface NavGroup {
   title: string;
-  icon: string;
+  icon: LucideIcon;
   roles?: Role[];
   items: NavItem[];
 }
@@ -23,74 +58,76 @@ interface NavGroup {
 const NAV_GROUPS: NavGroup[] = [
   {
     title: "Overview",
-    icon: "🏠",
-    items: [{ label: "Dashboard", to: "/dashboard", icon: "📊" }],
+    icon: LayoutDashboard,
+    items: [{ label: "Dashboard", to: "/dashboard", icon: LayoutDashboard }],
   },
   {
     title: "Environmental",
-    icon: "🌍",
+    icon: Globe,
     items: [
-      { label: "Dashboard", to: "/environmental-dashboard", icon: "🌍" },
-      { label: "Log Activities", to: "/operations", icon: "🏭" },
-      { label: "Carbon Ledger", to: "/carbon-ledger", icon: "📋" },
+      { label: "Dashboard", to: "/environmental-dashboard", icon: Globe },
+      { label: "Log Activities", to: "/operations", icon: Factory },
+      { label: "Carbon Ledger", to: "/carbon-ledger", icon: ClipboardList },
     ],
   },
   {
     title: "Social",
-    icon: "🤝",
+    icon: HeartHandshake,
     items: [
-      { label: "Dashboard", to: "/social-dashboard", icon: "🤝" },
-      { label: "CSR Activities", to: "/csr-activities", icon: "🌳" },
-      { label: "CSR Review", to: "/participations", icon: "📝" },
-      { label: "Social Metrics", to: "/social-metrics", icon: "📈" },
+      { label: "Dashboard", to: "/social-dashboard", icon: HeartHandshake },
+      { label: "CSR Activities", to: "/csr-activities", icon: Trees },
+      { label: "CSR Review", to: "/participations", icon: ClipboardCheck },
+      { label: "Social Metrics", to: "/social-metrics", icon: TrendingUp },
     ],
   },
   {
     title: "Governance",
-    icon: "⚖️",
+    icon: Scale,
     items: [
-      { label: "Dashboard", to: "/governance-dashboard", icon: "⚖️" },
-      { label: "Policy Sign-off", to: "/policy-acknowledgements", icon: "📜" },
-      { label: "Audits Log", to: "/audits", icon: "🔍" },
-      { label: "Compliance Issues", to: "/compliance-issues", icon: "⚠️" },
+      { label: "Dashboard", to: "/governance-dashboard", icon: Scale },
+      { label: "Policy Sign-off", to: "/policy-acknowledgements", icon: FileSignature },
+      { label: "Audits Log", to: "/audits", icon: FileSearch },
+      { label: "Compliance Issues", to: "/compliance-issues", icon: ShieldAlert },
     ],
   },
   {
     title: "Gamification",
-    icon: "🏆",
+    icon: Trophy,
     items: [
-      { label: "Leaderboard", to: "/leaderboard", icon: "🏆" },
-      { label: "Challenges", to: "/challenges", icon: "🎯" },
-      { label: "Challenge Reviews", to: "/challenge-reviews", icon: "📋" },
-      { label: "Rewards Store", to: "/rewards-store", icon: "🎁" },
+      { label: "Leaderboard", to: "/leaderboard", icon: Trophy },
+      { label: "Challenges", to: "/challenges", icon: Target },
+      { label: "Challenge Reviews", to: "/challenge-reviews", icon: ClipboardList },
+      { label: "Rewards Store", to: "/rewards-store", icon: Gift },
     ],
   },
   {
     title: "Insights",
-    icon: "⭐",
+    icon: Sparkles,
     items: [
-      { label: "ESG Scoring Engine", to: "/esg-scores", icon: "⭐" },
-      { label: "ESG Reports", to: "/reports", icon: "📊" },
+      { label: "ESG Scoring Engine", to: "/esg-scores", icon: Gauge },
+      { label: "ESG Reports", to: "/reports", icon: BarChart3 },
     ],
   },
   {
     title: "Administration",
-    icon: "🛠️",
+    icon: Wrench,
     roles: ["ADMIN"],
     items: [
-      { label: "Departments", to: "/departments", icon: "🏢" },
-      { label: "Categories", to: "/categories", icon: "🏷️" },
-      { label: "Users", to: "/users", icon: "👥" },
-      { label: "Emission Factors", to: "/emission-factors", icon: "⚡" },
-      { label: "ESG Policies", to: "/esg-policies", icon: "📜" },
-      { label: "Badges", to: "/badges", icon: "🏅" },
-      { label: "Rewards", to: "/rewards", icon: "🎁" },
-      { label: "Product ESG Profiles", to: "/product-esg-profiles", icon: "📦" },
-      { label: "Environmental Goals", to: "/environmental-goals", icon: "🎯" },
-      { label: "Settings", to: "/settings", icon: "⚙️" },
+      { label: "Departments", to: "/departments", icon: Building2 },
+      { label: "Categories", to: "/categories", icon: Tags },
+      { label: "Users", to: "/users", icon: Users },
+      { label: "Emission Factors", to: "/emission-factors", icon: Zap },
+      { label: "ESG Policies", to: "/esg-policies", icon: ScrollText },
+      { label: "Badges", to: "/badges", icon: Award },
+      { label: "Rewards", to: "/rewards", icon: Gift },
+      { label: "Product ESG Profiles", to: "/product-esg-profiles", icon: Package },
+      { label: "Environmental Goals", to: "/environmental-goals", icon: Target },
+      { label: "Settings", to: "/settings", icon: Settings },
     ],
   },
 ];
+
+const ICON_SIZE = 17;
 
 export function AppShell() {
   const { user, logout } = useAuth();
@@ -100,10 +137,12 @@ export function AppShell() {
   // Only groups/items visible to the current role.
   const groups = useMemo(() => {
     if (!user) return [];
-    return NAV_GROUPS.filter((g) => !g.roles || g.roles.includes(user.role)).map((g) => ({
-      ...g,
-      items: g.items.filter((i) => !i.roles || i.roles.includes(user.role)),
-    })).filter((g) => g.items.length > 0);
+    return NAV_GROUPS.filter((g) => !g.roles || g.roles.includes(user.role))
+      .map((g) => ({
+        ...g,
+        items: g.items.filter((i) => !i.roles || i.roles.includes(user.role)),
+      }))
+      .filter((g) => g.items.length > 0);
   }, [user]);
 
   // The group containing the current route (used to auto-expand it).
@@ -133,10 +172,10 @@ export function AppShell() {
       {/* Sidebar */}
       <aside className={`appshell-sidebar ${sidebarOpen ? "appshell-sidebar--open" : ""}`}>
         <div className="appshell-sidebar-header">
-          <span className="appshell-logo-icon">🌱</span>
+          <Leaf className="appshell-logo-icon" size={22} strokeWidth={2.2} />
           <span className="appshell-logo-text">EcoSphere</span>
           <button className="appshell-sidebar-close" onClick={closeSidebar} aria-label="Close sidebar">
-            ✕
+            <X size={18} />
           </button>
         </div>
 
@@ -145,6 +184,7 @@ export function AppShell() {
             // Single-item groups (Overview) render as a plain link — no accordion.
             if (group.items.length === 1) {
               const item = group.items[0];
+              const Icon = item.icon;
               return (
                 <NavLink
                   key={group.title}
@@ -155,12 +195,13 @@ export function AppShell() {
                     `appshell-nav-link ${isActive ? "appshell-nav-link--active" : ""}`
                   }
                 >
-                  <span>{item.icon}</span>
+                  <Icon size={ICON_SIZE} className="appshell-nav-icon" />
                   {item.label}
                 </NavLink>
               );
             }
 
+            const GroupIcon = group.icon;
             const isOpen = openGroups.has(group.title) || activeGroupTitle === group.title;
             return (
               <div key={group.title} className="appshell-nav-group">
@@ -170,31 +211,35 @@ export function AppShell() {
                   aria-expanded={isOpen}
                 >
                   <span className="appshell-nav-group-title">
-                    <span>{group.icon}</span>
+                    <GroupIcon size={15} className="appshell-nav-group-icon" />
                     {group.title}
                   </span>
-                  <span className={`appshell-chevron ${isOpen ? "appshell-chevron--open" : ""}`}>
-                    ▸
-                  </span>
+                  <ChevronRight
+                    size={14}
+                    className={`appshell-chevron ${isOpen ? "appshell-chevron--open" : ""}`}
+                  />
                 </button>
 
                 {isOpen && (
                   <div className="appshell-nav-group-items">
-                    {group.items.map((item) => (
-                      <NavLink
-                        key={item.to}
-                        to={item.to}
-                        onClick={closeSidebar}
-                        className={({ isActive }) =>
-                          `appshell-nav-link appshell-nav-sublink ${
-                            isActive ? "appshell-nav-link--active" : ""
-                          }`
-                        }
-                      >
-                        <span>{item.icon}</span>
-                        {item.label}
-                      </NavLink>
-                    ))}
+                    {group.items.map((item) => {
+                      const Icon = item.icon;
+                      return (
+                        <NavLink
+                          key={item.to}
+                          to={item.to}
+                          onClick={closeSidebar}
+                          className={({ isActive }) =>
+                            `appshell-nav-link appshell-nav-sublink ${
+                              isActive ? "appshell-nav-link--active" : ""
+                            }`
+                          }
+                        >
+                          <Icon size={ICON_SIZE} className="appshell-nav-icon" />
+                          {item.label}
+                        </NavLink>
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -214,7 +259,7 @@ export function AppShell() {
             onClick={() => setSidebarOpen(true)}
             aria-label="Open navigation menu"
           >
-            ☰
+            <Menu size={22} />
           </button>
           <div className="appshell-header-brand">ESG Management Platform</div>
 
@@ -225,7 +270,8 @@ export function AppShell() {
               <span className="appshell-user-role">{user?.role}</span>
             </div>
             <button id="logout-btn" onClick={logout} className="appshell-logout-btn">
-              Logout
+              <LogOut size={15} />
+              <span>Logout</span>
             </button>
           </div>
         </header>
