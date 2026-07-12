@@ -16,6 +16,7 @@ import productESGProfileRoutes from "./modules/master/productESGProfiles/product
 import environmentalGoalRoutes from "./modules/master/environmentalGoals/environmentalGoal.routes";
 import environmentalRoutes from "./modules/environmental/environmental.routes";
 import socialRoutes from "./modules/social/social.routes";
+import governanceRoutes from "./modules/governance/governance.routes";
 
 export function createApp() {
   const app = express();
@@ -42,6 +43,7 @@ export function createApp() {
   app.use("/api/environmental-goals", environmentalGoalRoutes);
   app.use("/api/environmental", environmentalRoutes);
   app.use("/api/social", socialRoutes);
+  app.use("/api/governance", governanceRoutes);
 
   // Fallbacks
   app.use(notFound);

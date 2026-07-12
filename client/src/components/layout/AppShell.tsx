@@ -9,7 +9,7 @@ interface NavItem {
   roles?: Role[];
 }
 
-// Phase 1 + Phase 2 + Phase 3 nav.
+// Phase 1 + Phase 2 + Phase 3 + Phase 4 nav.
 const NAV: NavItem[] = [
   { label: "Dashboard", to: "/", icon: "📊" },
   // -- Phase 2: Environmental --
@@ -21,6 +21,11 @@ const NAV: NavItem[] = [
   { label: "CSR Activities", to: "/csr-activities", icon: "🌳" },
   { label: "CSR Review", to: "/participations", icon: "📝" },
   { label: "Social Metrics", to: "/social-metrics", icon: "📈" },
+  // -- Phase 4: Governance --
+  { label: "Gov Dashboard", to: "/governance-dashboard", icon: "⚖️" },
+  { label: "Policy Sign-off", to: "/policy-acknowledgements", icon: "📜" },
+  { label: "Audits Log", to: "/audits", icon: "🔍" },
+  { label: "Compliance Issues", to: "/compliance-issues", icon: "⚠️" },
   // -- Master Data (Admin) --
   { label: "Departments", to: "/departments", icon: "🏢", roles: ["ADMIN"] },
   { label: "Categories", to: "/categories", icon: "🏷️", roles: ["ADMIN"] },
@@ -63,7 +68,7 @@ export function AppShell() {
           ))}
         </nav>
         <div className="border-t border-gray-100 p-3 text-xs text-gray-400">
-          Phase 3 · Social Module
+          Phase 4 · Governance Module
         </div>
       </aside>
 

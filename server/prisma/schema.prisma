@@ -64,6 +64,8 @@ model User {
   headOf             Department?          @relation("DepartmentHead")
   operationalRecords OperationalRecord[]
   participations     Participation[]
+  acknowledgements   PolicyAcknowledgement[]
+  ownedIssues        ComplianceIssue[]    @relation("IssueOwner")
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
 }
@@ -83,6 +85,8 @@ model Department {
   carbonTransactions CarbonTransaction[]
   csrActivities      CsrActivity[]
   socialMetrics      SocialMetric[]
+  audits             Audit[]
+  complianceIssues   ComplianceIssue[]
   employeeCount      Int                  @default(0)
   status             Status               @default(ACTIVE)
   createdAt          DateTime             @default(now())
@@ -139,14 +143,15 @@ model EnvironmentalGoal {
 }
 
 model ESGPolicy {
-  id            String   @id @default(cuid())
-  title         String
-  description   String
-  version       String   @default("1.0")
-  effectiveDate DateTime @default(now())
-  status        Status   @default(ACTIVE)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id               String                 @id @default(cuid())
+  title            String
+  description      String
+  version          String                 @default("1.0")
+  effectiveDate    DateTime               @default(now())
+  status           Status                 @default(ACTIVE)
+  acknowledgements PolicyAcknowledgement[]
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
 }
 
 model Badge {
@@ -256,6 +261,48 @@ model SocialMetric {
   notes            String?
   createdAt        DateTime    @default(now())
   updatedAt        DateTime    @updatedAt
+}
+
+// ---------- Phase 4: Governance ----------
+model PolicyAcknowledgement {
+  id          String    @id @default(cuid())
+  policyId    String
+  policy      ESGPolicy @relation(fields: [policyId], references: [id])
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  acknowledgedAt DateTime @default(now())
+
+  @@unique([policyId, userId])
+}
+
+model Audit {
+  id           String     @id @default(cuid())
+  title        String
+  auditor      String     // e.g. "PwC", "Internal Team"
+  auditDate    DateTime
+  rating       String     // e.g. "EXCELLENT", "SATISFACTORY", "NEEDS_IMPROVEMENT"
+  score        Float?     // optional numeric score (e.g. 0-100)
+  findings     String
+  departmentId String
+  department   Department @relation(fields: [departmentId], references: [id])
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model ComplianceIssue {
+  id           String     @id @default(cuid())
+  title        String
+  description  String
+  severity     String     // e.g. "LOW", "MEDIUM", "HIGH", "CRITICAL"
+  status       String     // e.g. "OPEN", "IN_PROGRESS", "RESOLVED"
+  dueDate      DateTime
+  resolvedAt   DateTime?
+  ownerId      String
+  owner        User       @relation("IssueOwner", fields: [ownerId], references: [id])
+  departmentId String
+  department   Department @relation(fields: [departmentId], references: [id])
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
 }
 
 // ---------- Settings (single row, id = 1) ----------
