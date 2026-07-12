@@ -4,8 +4,8 @@ import { api, getApiError } from "../../api/client";
 interface EmployeeRank {
   id: string;
   name: string;
-  xp: int;
-  points: int;
+  xp: number;
+  points: number;
   department?: { name: string } | null;
 }
 
