@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Globe,
@@ -14,21 +15,9 @@ import {
   Trophy,
   Calendar,
 } from "lucide-react";
-import {
-  mockAdminKpis,
-  mockRadarData,
-  mockDeptEsgData,
-  mockMonthlyEmissions,
-  mockCsrByDept,
-  mockChallengeParticipation,
-  mockBadgeDistribution,
-  mockComplianceIssues,
-  mockDeptRanking,
-  mockActivityFeed,
-  mockLeaderboard,
-  mockUpcomingEvents,
-  CHART_COLORS,
-} from "../data/mockData";
+import { CHART_COLORS } from "../data/mockData";
+import { getOverview, type AdminOverview } from "../../../api/dashboard";
+import { getApiError } from "../../../api/client";
 import { KpiCard } from "../components/KpiCard";
 import { ChartCard } from "../components/ChartCard";
 import { ActivityFeed } from "../components/ActivityFeed";
@@ -51,16 +40,27 @@ const EVENT_TYPE_COLOR: Record<string, string> = {
 
 export function AdminDashboard() {
   const navigate = useNavigate();
-  const kpis = mockAdminKpis;
+  const [d, setD] = useState<AdminOverview | null>(null);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    getOverview()
+      .then((res) => setD(res as AdminOverview))
+      .catch((e) => setError(getApiError(e)));
+  }, []);
+
+  if (error) return <div className="rounded-lg bg-red-50 p-4 text-sm text-red-600">{error}</div>;
+  if (!d) return <div className="flex h-64 items-center justify-center text-sm text-gray-400">Loading dashboard…</div>;
+
+  const kpis = d.kpis;
 
   return (
     <div className="space-y-8">
-
       {/* ── Header ──────────────────────────────────────────────────── */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-          <p className="text-sm text-gray-500 mt-0.5">Organization-wide ESG analytics</p>
+          <p className="text-sm text-gray-500 mt-0.5">Organization-wide ESG analytics · live data</p>
         </div>
         <div className="flex items-center gap-2">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-green-50 px-3 py-1 text-xs font-semibold text-green-700 border border-green-100">
@@ -79,14 +79,12 @@ export function AdminDashboard() {
       {/* ── ESG Score Hero ───────────────────────────────────────────── */}
       <div className="rounded-2xl bg-gradient-to-br from-green-600 to-teal-600 p-6 text-white shadow-lg">
         <div className="grid grid-cols-2 gap-6 sm:grid-cols-4 items-center">
-          {/* Overall gauge */}
           <div className="col-span-2 sm:col-span-1 flex justify-center">
             <div className="text-center">
               <EsgGauge score={kpis.esgScore} label="" size={160} />
               <p className="text-sm font-semibold text-white/90 mt-2">Overall ESG Score</p>
             </div>
           </div>
-          {/* E / S / G sub-scores */}
           {[
             { label: "Environmental", score: kpis.envScore, icon: Globe },
             { label: "Social", score: kpis.socialScore, icon: HeartHandshake },
@@ -94,18 +92,14 @@ export function AdminDashboard() {
           ].map((s) => {
             const Icon = s.icon;
             return (
-            <div key={s.label} className="flex flex-col items-center text-center">
-              <Icon size={26} className="mb-1.5 text-white/90" strokeWidth={2} />
-              <div className="text-4xl font-bold">{s.score}</div>
-              <div className="text-sm text-white/70 mt-1">{s.label}</div>
-              {/* Mini progress bar */}
-              <div className="mt-2 h-1.5 w-20 rounded-full bg-white/20 overflow-hidden">
-                <div
-                  className="h-1.5 rounded-full bg-white/80 transition-all duration-700"
-                  style={{ width: `${s.score}%` }}
-                />
+              <div key={s.label} className="flex flex-col items-center text-center">
+                <Icon size={26} className="mb-1.5 text-white/90" strokeWidth={2} />
+                <div className="text-4xl font-bold">{s.score}</div>
+                <div className="text-sm text-white/70 mt-1">{s.label}</div>
+                <div className="mt-2 h-1.5 w-20 rounded-full bg-white/20 overflow-hidden">
+                  <div className="h-1.5 rounded-full bg-white/80 transition-all duration-700" style={{ width: `${s.score}%` }} />
+                </div>
               </div>
-            </div>
             );
           })}
         </div>
@@ -115,61 +109,63 @@ export function AdminDashboard() {
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-4">
         <KpiCard icon={Building2} iconColor="text-blue-600" label="Departments" value={kpis.totalDepartments} accent="bg-blue-50" onClick={() => navigate("/departments")} />
         <KpiCard icon={Users} iconColor="text-teal-600" label="Total Employees" value={kpis.totalEmployees} accent="bg-teal-50" onClick={() => navigate("/users")} />
-        <KpiCard icon={Trees} iconColor="text-green-600" label="Active CSR Activities" value={kpis.activeCsr} accent="bg-green-50" delta={8} onClick={() => navigate("/csr-activities")} />
+        <KpiCard icon={Trees} iconColor="text-green-600" label="Active CSR Activities" value={kpis.activeCsr} accent="bg-green-50" onClick={() => navigate("/csr-activities")} />
         <KpiCard icon={Target} iconColor="text-purple-600" label="Active Challenges" value={kpis.activeChallenges} accent="bg-purple-50" onClick={() => navigate("/challenges")} />
-        <KpiCard icon={Factory} iconColor="text-red-600" label="Total CO₂ Emissions" value={kpis.totalEmissions.toFixed(0)} unit="kgCO₂e" accent="bg-red-50" delta={-6} deltaLabel="reduced vs last month" />
+        <KpiCard icon={Factory} iconColor="text-red-600" label="Total CO₂ Emissions" value={kpis.totalEmissions.toFixed(0)} unit="kgCO₂e" accent="bg-red-50" />
         <KpiCard icon={ShieldAlert} iconColor="text-orange-600" label="Compliance Issues" value={kpis.complianceIssues} accent="bg-orange-50" onClick={() => navigate("/compliance-issues")} />
         <KpiCard icon={ScrollText} iconColor="text-amber-600" label="Pending Policies" value={kpis.pendingPolicies} accent="bg-amber-50" onClick={() => navigate("/policy-acknowledgements")} />
-        <KpiCard icon={Star} iconColor="text-green-600" label="ESG Score" value={kpis.esgScore} unit="/ 100" accent="bg-green-50" delta={3} />
+        <KpiCard icon={Star} iconColor="text-green-600" label="ESG Score" value={kpis.esgScore} unit="/ 100" accent="bg-green-50" />
       </div>
 
       {/* ── Charts Row 1 ─────────────────────────────────────────────── */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <ChartCard title="ESG Score Distribution" subtitle="Radar view of all ESG dimensions">
-          <EsgRadarChart data={mockRadarData} />
+          <EsgRadarChart data={d.radar} />
         </ChartCard>
         <ChartCard title="Department ESG Comparison" subtitle="Env / Social / Gov scores by department">
-          <DeptBarChart data={mockDeptEsgData} />
+          <DeptBarChart data={d.deptEsg} />
         </ChartCard>
       </div>
 
       {/* ── Charts Row 2 ─────────────────────────────────────────────── */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <ChartCard title="Monthly Carbon Emissions" subtitle="Last 12 months (kgCO₂e)">
-          <EmissionLineChart data={mockMonthlyEmissions} refValue={500} />
+        <ChartCard title="Monthly Carbon Emissions" subtitle="Last 8 months (kgCO₂e)">
+          <EmissionLineChart data={d.monthlyEmissions} refValue={500} />
         </ChartCard>
-        <ChartCard title="CSR Participation by Department" subtitle="Number of activities completed">
-          <SimpleBarChart data={mockCsrByDept} xKey="dept" dataKey="count" label="Activities" color={CHART_COLORS[1]} />
+        <ChartCard title="CSR Participation by Department" subtitle="Approved participations">
+          <SimpleBarChart data={d.csrByDept} xKey="dept" dataKey="count" label="Activities" color={CHART_COLORS[1]} />
         </ChartCard>
       </div>
 
       {/* ── Charts Row 3 ─────────────────────────────────────────────── */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <ChartCard title="Challenge Participation" className="lg:col-span-1">
-          <DonutChart data={mockChallengeParticipation} />
+          <DonutChart data={d.challengeParticipation} />
         </ChartCard>
         <ChartCard title="Badge Distribution" className="lg:col-span-1">
-          <DonutChart data={mockBadgeDistribution} colors={["#16a34a", "#0d9488", "#2563eb", "#7c3aed", "#d97706"]} />
+          <DonutChart data={d.badgeDistribution} colors={["#16a34a", "#0d9488", "#2563eb", "#7c3aed", "#d97706"]} />
         </ChartCard>
         <ChartCard title="Compliance Issues by Severity" className="sm:col-span-2">
-          <ComplianceBarChart data={mockComplianceIssues} />
+          <ComplianceBarChart data={d.complianceBySeverity} />
         </ChartCard>
       </div>
 
       {/* ── Department Ranking ───────────────────────────────────────── */}
       <ChartCard title="Department ESG Ranking" subtitle="Overall composite ESG score">
-        <DeptRankingChart data={mockDeptRanking} />
+        <DeptRankingChart data={d.deptRanking} />
       </ChartCard>
 
       {/* ── Bottom Row: Activity + Leaderboard + Events ─────────────── */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        {/* Activity Feed */}
         <div className="rounded-2xl bg-white border border-gray-100 shadow-sm p-5 lg:col-span-1">
           <h3 className="text-sm font-semibold text-gray-800 mb-4">Recent Activity</h3>
-          <ActivityFeed items={mockActivityFeed} />
+          {d.activityFeed.length === 0 ? (
+            <p className="text-sm text-gray-400">No recent activity.</p>
+          ) : (
+            <ActivityFeed items={d.activityFeed} />
+          )}
         </div>
 
-        {/* Leaderboard */}
         <div className="rounded-2xl bg-white border border-gray-100 shadow-sm p-5 lg:col-span-1">
           <div className="flex items-center justify-between mb-4">
             <h3 className="flex items-center gap-1.5 text-sm font-semibold text-gray-800">
@@ -177,33 +173,35 @@ export function AdminDashboard() {
             </h3>
             <button onClick={() => navigate("/leaderboard")} className="text-xs text-green-600 hover:underline">View all</button>
           </div>
-          <LeaderboardTable entries={mockLeaderboard} />
+          <LeaderboardTable entries={d.leaderboard} />
         </div>
 
-        {/* Upcoming Events */}
         <div className="rounded-2xl bg-white border border-gray-100 shadow-sm p-5 lg:col-span-1">
           <h3 className="flex items-center gap-1.5 text-sm font-semibold text-gray-800 mb-4">
             <Calendar size={16} className="text-gray-400" /> Upcoming Events
           </h3>
           <div className="space-y-3">
-            {mockUpcomingEvents.map((ev) => (
-              <div key={ev.id} className="flex items-start gap-3 rounded-xl bg-gray-50 p-3">
-                <div
-                  className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg text-sm font-bold text-white"
-                  style={{ background: EVENT_TYPE_COLOR[ev.type] ?? "#6b7280" }}
-                >
-                  {ev.type[0]}
+            {d.upcomingEvents.length === 0 ? (
+              <p className="text-sm text-gray-400">No upcoming events.</p>
+            ) : (
+              d.upcomingEvents.map((ev) => (
+                <div key={ev.id} className="flex items-start gap-3 rounded-xl bg-gray-50 p-3">
+                  <div
+                    className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg text-sm font-bold text-white"
+                    style={{ background: EVENT_TYPE_COLOR[ev.type] ?? "#6b7280" }}
+                  >
+                    {ev.type[0]}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-gray-800 truncate">{ev.title}</p>
+                    <p className="text-xs text-gray-400">{ev.date} · {ev.dept}</p>
+                  </div>
                 </div>
-                <div className="min-w-0">
-                  <p className="text-sm font-medium text-gray-800 truncate">{ev.title}</p>
-                  <p className="text-xs text-gray-400">{ev.date} · {ev.dept}</p>
-                </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
       </div>
-
     </div>
   );
 }

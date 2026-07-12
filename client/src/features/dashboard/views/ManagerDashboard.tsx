@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Star,
@@ -16,19 +17,11 @@ import {
   ScrollText,
   type LucideIcon,
 } from "lucide-react";
-import {
-  mockManagerKpis,
-  mockDeptEsgTrend,
-  mockTeamParticipation,
-  mockGoalProgress,
-  mockCsrStatus,
-  mockActivityFeed,
-  mockUpcomingEvents,
-  CHART_COLORS,
-} from "../data/mockData";
+import { CHART_COLORS } from "../data/mockData";
+import { getOverview, type ManagerOverview } from "../../../api/dashboard";
+import { getApiError } from "../../../api/client";
 import { KpiCard } from "../components/KpiCard";
 import { ChartCard } from "../components/ChartCard";
-import { ActivityFeed } from "../components/ActivityFeed";
 import { GoalProgressCards } from "../components/GoalProgressCards";
 import { QuickActions } from "../components/QuickActions";
 import { EmissionLineChart } from "../charts/EmissionLineChart";
@@ -49,7 +42,6 @@ const QUICK_ACTIONS = [
   { icon: FileSearch, label: "Audit Logs", to: "/audits", color: "#14b8a6" },
 ];
 
-// Icon for an event row based on its type.
 function eventIcon(type: string): LucideIcon {
   if (type === "CSR") return Trees;
   if (type === "Audit") return FileSearch;
@@ -59,16 +51,27 @@ function eventIcon(type: string): LucideIcon {
 
 export function ManagerDashboard() {
   const navigate = useNavigate();
-  const kpis = mockManagerKpis;
+  const [d, setD] = useState<ManagerOverview | null>(null);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    getOverview()
+      .then((res) => setD(res as ManagerOverview))
+      .catch((e) => setError(getApiError(e)));
+  }, []);
+
+  if (error) return <div className="rounded-lg bg-red-50 p-4 text-sm text-red-600">{error}</div>;
+  if (!d) return <div className="flex h-64 items-center justify-center text-sm text-gray-400">Loading dashboard…</div>;
+
+  const kpis = d.kpis;
 
   return (
     <div className="space-y-8">
-
       {/* ── Header ──────────────────────────────────────────────────── */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Manager Dashboard</h1>
-          <p className="text-sm text-gray-500 mt-0.5">Department performance & team overview</p>
+          <p className="text-sm text-gray-500 mt-0.5">{d.deptName} · performance & team overview</p>
         </div>
         <button
           onClick={() => navigate("/esg-scores")}
@@ -101,8 +104,8 @@ export function ManagerDashboard() {
 
       {/* ── KPIs ──────────────────────────────────────────────────────── */}
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-        <KpiCard icon={Star} iconColor="text-teal-600" label="Dept ESG Score" value={kpis.deptEsgScore} unit="/ 100" accent="bg-teal-50" delta={3} />
-        <KpiCard icon={Factory} iconColor="text-red-600" label="Dept Emissions" value={kpis.deptEmissions.toFixed(0)} unit="kgCO₂e" accent="bg-red-50" delta={-4} />
+        <KpiCard icon={Star} iconColor="text-teal-600" label="Dept ESG Score" value={kpis.deptEsgScore} unit="/ 100" accent="bg-teal-50" />
+        <KpiCard icon={Factory} iconColor="text-red-600" label="Dept Emissions" value={kpis.deptEmissions.toFixed(0)} unit="kgCO₂e" accent="bg-red-50" />
         <KpiCard icon={ClipboardList} iconColor="text-amber-600" label="Pending Approvals" value={kpis.pendingApprovals} accent="bg-amber-50" onClick={() => navigate("/participations")} />
         <KpiCard icon={Trees} iconColor="text-green-600" label="CSR Participation" value={`${kpis.csrParticipation}%`} accent="bg-green-50" />
         <KpiCard icon={Target} iconColor="text-purple-600" label="Active Challenges" value={kpis.activeChallenges} accent="bg-purple-50" onClick={() => navigate("/challenges")} />
@@ -111,28 +114,26 @@ export function ManagerDashboard() {
 
       {/* ── Charts Row 1 ─────────────────────────────────────────────── */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <ChartCard title="Monthly Dept ESG Trend" subtitle="Department score over last 7 months">
-          <EmissionLineChart
-            data={mockDeptEsgTrend}
-            dataKey="score"
-            label="ESG Score"
-            color={CHART_COLORS[1]}
-            unit=""
-          />
+        <ChartCard title="Monthly Dept ESG Trend" subtitle="Environmental score trend (last 7 months)">
+          <EmissionLineChart data={d.deptEsgTrend} dataKey="score" label="ESG Score" color={CHART_COLORS[1]} unit="" />
         </ChartCard>
 
         <ChartCard title="CSR Activity Status" subtitle="Activity breakdown by status">
-          <DonutChart data={mockCsrStatus} colors={["#16a34a", "#d97706", "#2563eb"]} />
+          {d.csrStatus.length === 0 ? (
+            <div className="flex h-40 items-center justify-center text-sm text-gray-400">No CSR activities yet.</div>
+          ) : (
+            <DonutChart data={d.csrStatus} colors={["#16a34a", "#d97706", "#2563eb"]} />
+          )}
         </ChartCard>
       </div>
 
       {/* ── Team Participation Chart ──────────────────────────────────── */}
       <ChartCard title="Team Participation" subtitle="Challenges & CSR completed per team member">
         <ResponsiveContainer width="100%" height={220}>
-          <BarChart data={mockTeamParticipation} margin={{ top: 5, right: 10, bottom: 5, left: -10 }}>
+          <BarChart data={d.teamParticipation} margin={{ top: 5, right: 10, bottom: 5, left: -10 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" vertical={false} />
             <XAxis dataKey="name" tick={{ fontSize: 11, fill: "#6b7280" }} />
-            <YAxis tick={{ fontSize: 10, fill: "#9ca3af" }} />
+            <YAxis tick={{ fontSize: 10, fill: "#9ca3af" }} allowDecimals={false} />
             <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8, border: "1px solid #e5e7eb" }} />
             <Legend wrapperStyle={{ fontSize: 11 }} />
             <Bar dataKey="challenges" name="Challenges" fill={CHART_COLORS[3]} radius={[3, 3, 0, 0]} />
@@ -141,32 +142,39 @@ export function ManagerDashboard() {
         </ResponsiveContainer>
       </ChartCard>
 
-      {/* ── Goal Progress ────────────────────────────────────────────── */}
+      {/* ── Goal Progress + Events ───────────────────────────────────── */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <div className="rounded-2xl bg-white border border-gray-100 shadow-sm p-5">
           <h3 className="text-sm font-semibold text-gray-800 mb-4">Goal Completion Progress</h3>
-          <GoalProgressCards items={mockGoalProgress} />
+          {d.goalProgress.length === 0 ? (
+            <p className="text-sm text-gray-400">No goals set for this department.</p>
+          ) : (
+            <GoalProgressCards items={d.goalProgress} />
+          )}
         </div>
 
-        {/* Upcoming events */}
         <div className="rounded-2xl bg-white border border-gray-100 shadow-sm p-5">
           <h3 className="flex items-center gap-1.5 text-sm font-semibold text-gray-800 mb-4">
             <Calendar size={16} className="text-gray-400" /> Upcoming Events
           </h3>
           <div className="space-y-3">
-            {mockUpcomingEvents.slice(0, 4).map((ev) => {
-              const EvIcon = eventIcon(ev.type);
-              return (
-              <div key={ev.id} className="flex items-center gap-3 rounded-xl bg-gray-50 p-3">
-                <div className="flex-shrink-0 text-gray-500"><EvIcon size={18} /></div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium text-gray-800 truncate">{ev.title}</p>
-                  <p className="text-xs text-gray-400">{ev.date}</p>
-                </div>
-                <span className="text-xs text-gray-400 flex-shrink-0">{ev.type}</span>
-              </div>
-              );
-            })}
+            {d.upcomingEvents.length === 0 ? (
+              <p className="text-sm text-gray-400">No upcoming events.</p>
+            ) : (
+              d.upcomingEvents.slice(0, 4).map((ev) => {
+                const EvIcon = eventIcon(ev.type);
+                return (
+                  <div key={ev.id} className="flex items-center gap-3 rounded-xl bg-gray-50 p-3">
+                    <div className="flex-shrink-0 text-gray-500"><EvIcon size={18} /></div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium text-gray-800 truncate">{ev.title}</p>
+                      <p className="text-xs text-gray-400">{ev.date}</p>
+                    </div>
+                    <span className="text-xs text-gray-400 flex-shrink-0">{ev.type}</span>
+                  </div>
+                );
+              })
+            )}
           </div>
         </div>
       </div>
@@ -176,13 +184,6 @@ export function ManagerDashboard() {
         <h3 className="text-sm font-semibold text-gray-700 mb-3">Quick Actions</h3>
         <QuickActions actions={QUICK_ACTIONS} />
       </div>
-
-      {/* ── Recent Activity ──────────────────────────────────────────── */}
-      <div className="rounded-2xl bg-white border border-gray-100 shadow-sm p-5">
-        <h3 className="text-sm font-semibold text-gray-800 mb-4">Department Activity</h3>
-        <ActivityFeed items={mockActivityFeed.slice(0, 5)} />
-      </div>
-
     </div>
   );
 }

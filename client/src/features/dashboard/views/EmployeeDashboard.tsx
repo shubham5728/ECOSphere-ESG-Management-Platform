@@ -1,26 +1,9 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Target,
-  Trees,
-  Gift,
-  ScrollText,
-  Trophy,
-  BarChart3,
-  Wind,
-  Award,
-  Calendar,
-} from "lucide-react";
-import { useAuth } from "../../../store/AuthContext";
-import {
-  mockEmployeeKpis,
-  mockXpProgress,
-  mockChallengeCompletion,
-  mockMonthlyParticipation,
-  mockBadgeProgress,
-  mockLeaderboard,
-  mockUpcomingEvents,
-  CHART_COLORS,
-} from "../data/mockData";
+import { Target, Trees, Gift, ScrollText, Trophy, BarChart3, Wind, Award, Calendar } from "lucide-react";
+import { CHART_COLORS } from "../data/mockData";
+import { getOverview, type EmployeeOverview } from "../../../api/dashboard";
+import { getApiError } from "../../../api/client";
 import { KpiCard } from "../components/KpiCard";
 import { ChartCard } from "../components/ChartCard";
 import { LeaderboardTable } from "../components/LeaderboardTable";
@@ -40,17 +23,27 @@ const QUICK_ACTIONS = [
 
 export function EmployeeDashboard() {
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const kpis = mockEmployeeKpis;
+  const [d, setD] = useState<EmployeeOverview | null>(null);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    getOverview()
+      .then((res) => setD(res as EmployeeOverview))
+      .catch((e) => setError(getApiError(e)));
+  }, []);
+
+  if (error) return <div className="rounded-lg bg-red-50 p-4 text-sm text-red-600">{error}</div>;
+  if (!d) return <div className="flex h-64 items-center justify-center text-sm text-gray-400">Loading dashboard…</div>;
+
+  const kpis = d.kpis;
 
   return (
     <div className="space-y-8">
-
       {/* ── Header ──────────────────────────────────────────────────── */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
-            Welcome back, {user?.name?.split(" ")[0] ?? "there"}
+            Welcome back, {d.userName?.split(" ")[0] ?? "there"}
           </h1>
           <p className="text-sm text-gray-500 mt-0.5">Your personal ESG progress dashboard</p>
         </div>
@@ -91,43 +84,35 @@ export function EmployeeDashboard() {
       {/* ── KPI Cards ─────────────────────────────────────────────────── */}
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         <KpiCard icon={Target} iconColor="text-purple-600" label="Joined Challenges" value={kpis.joinedChallenges} accent="bg-purple-50" onClick={() => navigate("/challenges")} />
-        <KpiCard icon={Trees} iconColor="text-green-600" label="CSR Completed" value={kpis.csrCompleted} accent="bg-green-50" delta={2} />
+        <KpiCard icon={Trees} iconColor="text-green-600" label="CSR Completed" value={kpis.csrCompleted} accent="bg-green-50" />
         <KpiCard icon={ScrollText} iconColor="text-amber-600" label="Policies Pending" value={kpis.policiesPending} accent="bg-amber-50" onClick={() => navigate("/policy-acknowledgements")} />
-        <KpiCard icon={Wind} iconColor="text-teal-600" label="Carbon Savings" value={kpis.carbonSavings.toFixed(1)} unit="kgCO₂e" accent="bg-teal-50" delta={12} deltaLabel="vs last month" />
+        <KpiCard icon={Wind} iconColor="text-teal-600" label="Carbon Savings" value={kpis.carbonSavings.toFixed(1)} unit="kgCO₂e" accent="bg-teal-50" />
       </div>
 
       {/* ── Charts Row 1 ─────────────────────────────────────────────── */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <ChartCard title="XP Progress" subtitle="Cumulative XP earned over time">
-          <EmissionLineChart
-            data={mockXpProgress}
-            dataKey="xp"
-            label="XP"
-            color={CHART_COLORS[3]}
-            unit=""
-          />
+          <EmissionLineChart data={d.xpProgress} dataKey="xp" label="XP" color={CHART_COLORS[3]} unit="" />
         </ChartCard>
         <ChartCard title="Challenge Completion" subtitle="Status of your challenge submissions">
-          <DonutChart data={mockChallengeCompletion} colors={["#16a34a", "#d97706", "#9ca3af"]} />
+          {d.challengeCompletion.length === 0 ? (
+            <div className="flex h-40 items-center justify-center text-sm text-gray-400">No challenge submissions yet.</div>
+          ) : (
+            <DonutChart data={d.challengeCompletion} colors={["#16a34a", "#d97706", "#dc2626"]} />
+          )}
         </ChartCard>
       </div>
 
       {/* ── Monthly Participation ─────────────────────────────────────── */}
       <ChartCard title="Monthly Activity Participation" subtitle="Number of CSR / challenge activities per month">
-        <SimpleBarChart
-          data={mockMonthlyParticipation}
-          xKey="month"
-          dataKey="activities"
-          label="Activities"
-          color={CHART_COLORS[0]}
-        />
+        <SimpleBarChart data={d.monthlyParticipation} xKey="month" dataKey="activities" label="Activities" color={CHART_COLORS[0]} />
       </ChartCard>
 
       {/* ── Badge Progress ────────────────────────────────────────────── */}
       <div className="rounded-2xl bg-white border border-gray-100 shadow-sm p-5">
         <h3 className="text-sm font-semibold text-gray-800 mb-4">Badge Progress</h3>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {mockBadgeProgress.map((b, i) => {
+          {d.badgeProgress.map((b, i) => {
             const pct = Math.min(Math.round((b.current / b.target) * 100), 100);
             const color = CHART_COLORS[i % CHART_COLORS.length];
             return (
@@ -137,10 +122,7 @@ export function EmployeeDashboard() {
                   <span className="text-xs font-semibold text-gray-600">{b.current} / {b.target}</span>
                 </div>
                 <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
-                  <div
-                    className="h-2 rounded-full transition-all duration-700"
-                    style={{ width: `${pct}%`, background: color }}
-                  />
+                  <div className="h-2 rounded-full transition-all duration-700" style={{ width: `${pct}%`, background: color }} />
                 </div>
                 <p className="text-xs text-gray-400 mt-1">{pct}% complete</p>
               </div>
@@ -158,26 +140,30 @@ export function EmployeeDashboard() {
             </h3>
             <button onClick={() => navigate("/leaderboard")} className="text-xs text-green-600 hover:underline">Full board</button>
           </div>
-          <LeaderboardTable entries={mockLeaderboard} />
+          <LeaderboardTable entries={d.leaderboard} />
         </div>
 
         <div className="rounded-2xl bg-white border border-gray-100 shadow-sm p-5">
           <h3 className="flex items-center gap-1.5 text-sm font-semibold text-gray-800 mb-4">
-            <Calendar size={16} className="text-gray-400" /> Upcoming CSR Events
+            <Calendar size={16} className="text-gray-400" /> Upcoming Events
           </h3>
           <div className="space-y-3">
-            {mockUpcomingEvents.filter((e) => e.type === "CSR" || e.type === "Challenge").map((ev) => {
-              const EvIcon = ev.type === "CSR" ? Trees : Target;
-              return (
-              <div key={ev.id} className="flex items-start gap-3 rounded-xl bg-gray-50 p-3">
-                <div className="flex-shrink-0 mt-0.5 text-gray-500"><EvIcon size={18} /></div>
-                <div className="min-w-0">
-                  <p className="text-sm font-medium text-gray-800 truncate">{ev.title}</p>
-                  <p className="text-xs text-gray-400">{ev.date} · {ev.dept}</p>
-                </div>
-              </div>
-              );
-            })}
+            {d.upcomingEvents.length === 0 ? (
+              <p className="text-sm text-gray-400">No upcoming events.</p>
+            ) : (
+              d.upcomingEvents.map((ev) => {
+                const EvIcon = ev.type === "CSR" ? Trees : ev.type === "Challenge" ? Target : ScrollText;
+                return (
+                  <div key={ev.id} className="flex items-start gap-3 rounded-xl bg-gray-50 p-3">
+                    <div className="flex-shrink-0 mt-0.5 text-gray-500"><EvIcon size={18} /></div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-gray-800 truncate">{ev.title}</p>
+                      <p className="text-xs text-gray-400">{ev.date} · {ev.dept}</p>
+                    </div>
+                  </div>
+                );
+              })
+            )}
           </div>
         </div>
       </div>
@@ -187,7 +173,6 @@ export function EmployeeDashboard() {
         <h3 className="text-sm font-semibold text-gray-700 mb-3">Quick Actions</h3>
         <QuickActions actions={QUICK_ACTIONS} />
       </div>
-
     </div>
   );
 }
