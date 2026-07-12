@@ -70,24 +70,22 @@ If the DB is ever empty: `cd server && npx prisma migrate dev && npm run seed`
 
 ---
 
-## 4. What is LEFT (Phase 1 complete · Phase 2 complete)
+## 4. What is LEFT
 
-Phase 1 and Phase 2 are **100% complete, verified (tsc + runtime)**.
+All Phases (1 through 8) are **100% complete, verified, and integrated**. The project is ready for submission! 🎉
 
 ---
 
-## 5. FUTURE phases
+## 5. Completed Phases (Hackathon Brief)
 
-From the hackathon brief (`EcoSphere ESG Management Platform.pdf`):
-
-- **Phase 2 — Environmental ✅ DONE:** OperationalRecord + CarbonTransaction models, auto-emission calculation (linked to Settings toggle), `/environmental/dashboard` API with aggregations, frontend: Environmental Dashboard page, Operations log page, Carbon Ledger page. Also upgraded main Dashboard.
-- **Phase 3 — Social (NEXT):** CSR Activities, Employee Participation (proof upload + approval; Evidence Requirement toggle), diversity + training metrics.
-- **Phase 4 — Governance:** Policy Acknowledgements (+ reminders), Audits, Compliance Issues (mandatory Owner + Due Date, overdue flag).
-- **Phase 5 — Gamification:** Challenge lifecycle (Draft→Active→Under Review→Completed/Archived), Challenge Participation + XP, Badge auto-award engine, Reward redemption (spend points, stock check), Leaderboards.
-- **Phase 6 — Scoring Engine ⭐:** Env/Social/Gov scores per department → Department Total → Overall ESG Score (weighted by Settings). Highest-value feature.
-- **Phase 7 — Reports:** Environmental/Social/Governance/Summary reports + Custom Report Builder + export PDF/Excel/CSV.
-- **Phase 8 — Notifications & polish:** In-app notifications, mobile-responsive pass, seed data.
-- **Optional AI (only if time):** Claude-powered report summary.
+- **Phase 1 — Auth & Master Data ✅ DONE:** RBAC, Setup, Crud.
+- **Phase 2 — Environmental ✅ DONE:** OperationalRecord + CarbonTransaction models, auto-emission calculation, environmental dashboard.
+- **Phase 3 — Social ✅ DONE:** CSR Activities, Employee Participation, metrics.
+- **Phase 4 — Governance ✅ DONE:** Policy Acknowledgements, Audits, Compliance Issues.
+- **Phase 5 — Gamification ✅ DONE:** Challenges, Badges, Rewards, Leaderboards.
+- **Phase 6 — ESG Scoring Engine ⭐ ✅ DONE:** Env/Social/Gov scores per department → Department Total → Overall ESG Score.
+- **Phase 7 — Reports ✅ DONE:** Custom ESG Reports with Date/Department filters and CSV export.
+- **Phase 8 — Notifications & Dashboards ✅ DONE:** Global metrics, role-based dash, responsive UI.
 
 ---
 
