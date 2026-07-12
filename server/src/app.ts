@@ -5,6 +5,7 @@ import { errorHandler, notFound } from "./middleware/errorHandler";
 import { sendSuccess } from "./utils/apiResponse";
 import authRoutes from "./modules/auth/auth.routes";
 import departmentRoutes from "./modules/master/departments/department.routes";
+import categoryRoutes from "./modules/master/categories/category.routes";
 
 export function createApp() {
   const app = express();
@@ -20,6 +21,7 @@ export function createApp() {
   // Feature routes
   app.use("/api/auth", authRoutes);
   app.use("/api/departments", departmentRoutes);
+  app.use("/api/categories", categoryRoutes);
 
   // Fallbacks
   app.use(notFound);

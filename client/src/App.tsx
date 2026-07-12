@@ -7,6 +7,7 @@ import SignupPage from "./features/auth/SignupPage";
 import DashboardPage from "./features/dashboard/DashboardPage";
 import { MasterDataPage } from "./features/master/MasterDataPage";
 import { departmentsConfig } from "./features/master/configs/departments";
+import { categoriesConfig } from "./features/master/configs/categories";
 
 export default function App() {
   return (
@@ -30,6 +31,10 @@ export default function App() {
               <Route
                 path="/departments"
                 element={<MasterDataPage config={departmentsConfig} />}
+              />
+              <Route
+                path="/categories"
+                element={<MasterDataPage config={categoriesConfig} />}
               />
             </Route>
           </Route>
