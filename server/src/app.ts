@@ -18,6 +18,7 @@ import environmentalRoutes from "./modules/environmental/environmental.routes";
 import socialRoutes from "./modules/social/social.routes";
 import governanceRoutes from "./modules/governance/governance.routes";
 import gamificationRoutes from "./modules/gamification/gamification.routes";
+import scoringRoutes from "./modules/scoring/scoring.routes";
 
 export function createApp() {
   const app = express();
@@ -46,6 +47,7 @@ export function createApp() {
   app.use("/api/social", socialRoutes);
   app.use("/api/governance", governanceRoutes);
   app.use("/api/gamification", gamificationRoutes);
+  app.use("/api/scoring", scoringRoutes);
 
   // Fallbacks
   app.use(notFound);

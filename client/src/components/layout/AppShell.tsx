@@ -31,6 +31,8 @@ const NAV: NavItem[] = [
   { label: "Challenges", to: "/challenges", icon: "🎯" },
   { label: "Challenge Reviews", to: "/challenge-reviews", icon: "📋" },
   { label: "Rewards Store", to: "/rewards-store", icon: "🎁" },
+  // -- Phase 6: Scoring Engine --
+  { label: "ESG Scoring Engine", to: "/esg-scores", icon: "⭐" },
   // -- Master Data (Admin) --
   { label: "Departments", to: "/departments", icon: "🏢", roles: ["ADMIN"] },
   { label: "Categories", to: "/categories", icon: "🏷️", roles: ["ADMIN"] },
@@ -73,7 +75,7 @@ export function AppShell() {
           ))}
         </nav>
         <div className="border-t border-gray-100 p-3 text-xs text-gray-400">
-          Phase 5 · Gamification Module
+          Phase 6 · Scoring Engine Module
         </div>
       </aside>
 
