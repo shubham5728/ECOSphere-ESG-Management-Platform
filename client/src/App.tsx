@@ -27,6 +27,10 @@ import GovernanceDashboardPage from "./features/governance/GovernanceDashboardPa
 import PolicyAcknowledgementsPage from "./features/governance/PolicyAcknowledgementsPage";
 import AuditsPage from "./features/governance/AuditsPage";
 import ComplianceIssuesPage from "./features/governance/ComplianceIssuesPage";
+import LeaderboardPage from "./features/gamification/LeaderboardPage";
+import ChallengesPage from "./features/gamification/ChallengesPage";
+import ChallengeReviewsPage from "./features/gamification/ChallengeReviewsPage";
+import RewardsPage from "./features/gamification/RewardsPage";
 
 export default function App() {
   return (
@@ -52,6 +56,10 @@ export default function App() {
               <Route path="/policy-acknowledgements" element={<PolicyAcknowledgementsPage />} />
               <Route path="/audits" element={<AuditsPage />} />
               <Route path="/compliance-issues" element={<ComplianceIssuesPage />} />
+              <Route path="/leaderboard" element={<LeaderboardPage />} />
+              <Route path="/challenges" element={<ChallengesPage />} />
+              <Route path="/challenge-reviews" element={<ChallengeReviewsPage />} />
+              <Route path="/rewards-store" element={<RewardsPage />} />
             </Route>
           </Route>
 

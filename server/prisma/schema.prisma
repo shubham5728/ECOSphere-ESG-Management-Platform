@@ -49,25 +49,43 @@ enum ParticipationStatus {
   REJECTED
 }
 
+enum ChallengeStatus {
+  DRAFT
+  ACTIVE
+  UNDER_REVIEW
+  COMPLETED
+  ARCHIVED
+}
+
+enum ChallengeDifficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+
 // ---------- Users & Org ----------
 model User {
-  id                 String               @id @default(cuid())
-  name               String
-  email              String               @unique
-  passwordHash       String
-  role               Role                 @default(EMPLOYEE)
-  points             Int                  @default(0)
-  xp                 Int                  @default(0)
-  status             Status               @default(ACTIVE)
-  departmentId       String?
-  department         Department?          @relation("DepartmentMembers", fields: [departmentId], references: [id])
-  headOf             Department?          @relation("DepartmentHead")
-  operationalRecords OperationalRecord[]
-  participations     Participation[]
-  acknowledgements   PolicyAcknowledgement[]
-  ownedIssues        ComplianceIssue[]    @relation("IssueOwner")
-  createdAt          DateTime             @default(now())
-  updatedAt          DateTime             @updatedAt
+  id                  String                 @id @default(cuid())
+  name                String
+  email               String                 @unique
+  passwordHash        String
+  role                Role                   @default(EMPLOYEE)
+  points              Int                    @default(0)
+  xp                  Int                    @default(0)
+  status              Status                 @default(ACTIVE)
+  departmentId        String?
+  department          Department?            @relation("DepartmentMembers", fields: [departmentId], references: [id])
+  headOf              Department?            @relation("DepartmentHead")
+  operationalRecords  OperationalRecord[]
+  participations      Participation[]
+  acknowledgements    PolicyAcknowledgement[]
+  ownedIssues         ComplianceIssue[]      @relation("IssueOwner")
+  challengeSignups    ChallengeParticipation[]
+  badges              UserBadge[]
+  redemptions         RewardRedemption[]
+  createdAt           DateTime               @default(now())
+  updatedAt           DateTime               @updatedAt
 }
 
 model Department {
@@ -155,26 +173,28 @@ model ESGPolicy {
 }
 
 model Badge {
-  id          String     @id @default(cuid())
+  id          String      @id @default(cuid())
   name        String
   description String
   unlockRule  UnlockRule
   threshold   Int
-  icon        String     @default("🏅")
-  status      Status     @default(ACTIVE)
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  icon        String      @default("🏅")
+  status      Status      @default(ACTIVE)
+  userBadges  UserBadge[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 }
 
 model Reward {
-  id             String   @id @default(cuid())
+  id             String             @id @default(cuid())
   name           String
   description    String
   pointsRequired Int
-  stock          Int      @default(0)
-  status         Status   @default(ACTIVE)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  stock          Int                @default(0)
+  status         Status             @default(ACTIVE)
+  redemptions    RewardRedemption[]
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
 }
 
 // ---------- Phase 2: Environmental ----------
@@ -303,6 +323,60 @@ model ComplianceIssue {
   department   Department @relation(fields: [departmentId], references: [id])
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
+}
+
+// ---------- Phase 5: Gamification ----------
+model Challenge {
+  id              String                 @id @default(cuid())
+  title           String
+  description     String
+  startDate       DateTime
+  endDate         DateTime
+  xpReward        Int                    @default(100)
+  pointsReward    Int                    @default(200)
+  status          ChallengeStatus        @default(DRAFT)
+  participations  ChallengeParticipation[]
+  createdAt       DateTime               @default(now())
+  updatedAt       DateTime               @updatedAt
+}
+
+model ChallengeParticipation {
+  id            String              @id @default(cuid())
+  challengeId   String
+  challenge     Challenge           @relation(fields: [challengeId], references: [id])
+  userId        String
+  user          User                @relation(fields: [userId], references: [id])
+  proofUrl      String?
+  proofNote     String?
+  status        ParticipationStatus @default(PENDING)
+  reviewNote    String?
+  submittedAt   DateTime            @default(now())
+  reviewedAt    DateTime?
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  @@unique([challengeId, userId])
+}
+
+model UserBadge {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  badgeId    String
+  badge      Badge    @relation(fields: [badgeId], references: [id])
+  unlockedAt DateTime @default(now())
+
+  @@unique([userId, badgeId])
+}
+
+model RewardRedemption {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  rewardId    String
+  reward      Reward   @relation(fields: [rewardId], references: [id])
+  pointsSpent Int
+  redeemedAt  DateTime @default(now())
 }
 
 // ---------- Settings (single row, id = 1) ----------
