@@ -61,6 +61,70 @@ flowchart TD
 
 ---
 
+## 🗄️ What kind of data do we have?
+
+The database is split into two kinds of data:
+
+- **Master Data** — stable reference/setup info you configure once and reuse everywhere (like a dictionary).
+- **Transactional Data** — the day-to-day activity that keeps happening and points back to master data (like an activity log).
+
+> **Analogy:** Master data is the *menu and price list* of a restaurant; transactional data is every *order* placed using that menu.
+
+### 📦 Master Data (setup / reference)
+
+| Model | What it stores (plain language) | Key fields |
+|-------|--------------------------------|------------|
+| **Department** | Company teams and their ESG ownership | name, code, head, parent department, employeeCount, status |
+| **User** | Every person (Admin / Manager / Employee) | name, email, passwordHash, role, department, **xp**, **points**, status |
+| **Category** | Reusable labels shared by Social & Gamification | name, type (`CSR_ACTIVITY` / `CHALLENGE`), status |
+| **EmissionFactor** | Conversion numbers for carbon maths | name, source, unit, **factor** (kgCO₂ per unit), status |
+| **ProductESGProfile** | ESG info attached to a product | productName, category, carbonPerUnit, recyclablePct, notes |
+| **EnvironmentalGoal** | Sustainability targets to track | title, targetValue, currentValue, unit, deadline, department, status |
+| **ESGPolicy** | Governance rules employees must acknowledge | title, description, version, effectiveDate, status |
+| **Badge** | Achievements that auto-unlock | name, description, **unlockRule** (`XP_THRESHOLD` / `CHALLENGE_COUNT`), threshold, icon |
+| **Reward** | Prizes redeemable with points | name, description, **pointsRequired**, **stock**, status |
+| **Setting** | Single-row platform config | autoEmission, evidenceRequired, badgeAutoAward, weightEnv/Social/Gov |
+
+### 🔄 Transactional Data (day-to-day activity)
+
+| Model | What it records (plain language) | Key fields |
+|-------|----------------------------------|------------|
+| **OperationalRecord** | A business activity that produces carbon | type (`PURCHASE`/`MANUFACTURING`/`EXPENSE`/`FLEET`), quantity, unit, emissionFactor, department, user |
+| **CarbonTransaction** | The calculated CO₂ for an activity | emissions (kgCO₂), department, linked operational record |
+| **CsrActivity** | A social/community event the company runs | title, location, dates, maxParticipants, xpReward, pointsReward, department |
+| **Participation** | An employee joining a CSR activity | user, activity, proof, **status** (PENDING/APPROVED/REJECTED), xpAwarded, pointsAwarded |
+| **SocialMetric** | HR/diversity data per department per period | period, totalEmployees, femaleCount, trainingHours, safetyIncidents, volunteerHours |
+| **PolicyAcknowledgement** | An employee accepting a policy | policy, user, acknowledgedAt |
+| **Audit** | A governance/compliance audit report | title, auditor, auditDate, rating, score, findings, department |
+| **ComplianceIssue** | A rule violation to fix | title, severity, status, **dueDate**, **owner**, department (auto-flagged *overdue*) |
+| **Challenge** | A gamified sustainability task | title, dates, xpReward, pointsReward, **status** (Draft→Active→Under Review→Completed/Archived) |
+| **ChallengeParticipation** | An employee's challenge submission | challenge, user, proof, status |
+| **UserBadge** | A badge unlocked by an employee | user, badge, unlockedAt |
+| **RewardRedemption** | Points spent to claim a reward | user, reward, pointsSpent, redeemedAt |
+| **Notification** | An in-app alert to a user | type, title, message, isRead, link |
+
+### 🔗 How the data connects
+
+```
+Master config (Departments, Emission Factors, Policies, Badges, Rewards…)
+        │  is referenced by
+        ▼
+Transactional activity (Operational Records, CSR Participation, Challenges, Audits…)
+        │  rolls up into
+        ▼
+Scores & analytics (Carbon Transactions → E/S/G scores → Overall ESG Score)
+        │  shown on
+        ▼
+Dashboards, Leaderboards & Reports
+```
+
+- An **Operational Record** references an **Emission Factor** → generates a **Carbon Transaction** (`emissions = quantity × factor`).
+- A **Participation** / **ChallengeParticipation** references a **User** + activity → on approval, awards **XP & points** (updating the User) → may auto-unlock a **UserBadge**.
+- A **RewardRedemption** deducts a User's points and reduces a **Reward**'s stock.
+- **SocialMetric**, **Audit**, and **ComplianceIssue** feed the Social & Governance dashboards and department ESG scores.
+
+---
+
 ## 🛠️ Tech Stack
 
 - **Backend:** Node.js + Express + TypeScript + Prisma ORM
