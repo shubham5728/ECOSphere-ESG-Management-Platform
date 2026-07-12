@@ -16,6 +16,7 @@ interface AuthContextValue {
   login: (email: string, password: string) => Promise<void>;
   signup: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -54,8 +55,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }
 
+  async function refreshUser() {
+    try {
+      const updated = await meRequest();
+      setUser(updated);
+    } catch {}
+  }
+
   const value = useMemo(
-    () => ({ user, loading, login, signup, logout }),
+    () => ({ user, loading, login, signup, logout, refreshUser }),
     [user, loading]
   );
 
