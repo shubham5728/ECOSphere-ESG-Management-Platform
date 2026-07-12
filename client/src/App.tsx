@@ -32,6 +32,7 @@ import ChallengesPage from "./features/gamification/ChallengesPage";
 import ChallengeReviewsPage from "./features/gamification/ChallengeReviewsPage";
 import RewardsPage from "./features/gamification/RewardsPage";
 import EsgScoringPage from "./features/scoring/EsgScoringPage";
+import ReportsPage from "./features/reports/ReportsPage";
 
 export default function App() {
   return (
@@ -62,6 +63,7 @@ export default function App() {
               <Route path="/challenge-reviews" element={<ChallengeReviewsPage />} />
               <Route path="/rewards-store" element={<RewardsPage />} />
               <Route path="/esg-scores" element={<EsgScoringPage />} />
+              <Route path="/reports" element={<ReportsPage />} />
             </Route>
           </Route>
 
