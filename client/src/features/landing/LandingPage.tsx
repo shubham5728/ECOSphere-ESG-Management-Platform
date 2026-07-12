@@ -14,6 +14,7 @@ import {
   FileText,
   Lock,
   Globe2,
+  Star,
 } from "lucide-react";
 
 export function Navbar() {
@@ -115,30 +116,79 @@ export function HeroSection() {
                 </div>
                 {/* Main Content Area */}
                 <div className="flex-1 flex flex-col gap-6">
-                  <div className="flex justify-between items-end">
+                  <div className="flex justify-between items-end mb-4">
                     <div>
-                      <div className="h-6 w-48 bg-gray-800 rounded-md mb-2"></div>
-                      <div className="h-3 w-64 bg-gray-400 rounded-md"></div>
+                      <h3 className="text-lg font-bold text-gray-900">Platform Overview</h3>
+                      <p className="text-sm text-gray-500">Real-time sustainability metrics</p>
                     </div>
-                    <div className="h-8 w-24 bg-green-600 rounded-lg shadow-sm"></div>
+                    <div className="flex items-center gap-2 px-3 py-1.5 bg-green-50 text-green-700 text-sm font-medium rounded-lg border border-green-200">
+                      <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                      Live
+                    </div>
                   </div>
                   {/* KPI Cards row */}
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {[1, 2, 3, 4].map((i) => (
-                      <div key={i} className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col gap-3">
-                        <div className="h-8 w-8 rounded-lg bg-gray-100"></div>
-                        <div className="h-6 w-16 bg-gray-900 rounded-md"></div>
-                        <div className="h-2 w-24 bg-gray-200 rounded-md"></div>
+                    <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col gap-2">
+                      <div className="flex items-center gap-2 text-gray-500 mb-1">
+                        <Globe2 className="h-4 w-4 text-blue-500" />
+                        <span className="text-xs font-medium uppercase tracking-wide">Emissions</span>
                       </div>
-                    ))}
+                      <div className="text-xl font-bold text-gray-900">45.2k</div>
+                      <div className="text-xs text-green-600 font-medium">↓ 12% vs last month</div>
+                    </div>
+                    <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col gap-2">
+                      <div className="flex items-center gap-2 text-gray-500 mb-1">
+                        <Star className="h-4 w-4 text-amber-500" />
+                        <span className="text-xs font-medium uppercase tracking-wide">ESG Score</span>
+                      </div>
+                      <div className="text-xl font-bold text-gray-900">A-</div>
+                      <div className="text-xs text-gray-500 font-medium">Top 15% in industry</div>
+                    </div>
+                    <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col gap-2">
+                      <div className="flex items-center gap-2 text-gray-500 mb-1">
+                        <Target className="h-4 w-4 text-purple-500" />
+                        <span className="text-xs font-medium uppercase tracking-wide">Goals</span>
+                      </div>
+                      <div className="text-xl font-bold text-gray-900">12/15</div>
+                      <div className="text-xs text-green-600 font-medium">On track</div>
+                    </div>
+                    <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col gap-2">
+                      <div className="flex items-center gap-2 text-gray-500 mb-1">
+                        <Trophy className="h-4 w-4 text-green-500" />
+                        <span className="text-xs font-medium uppercase tracking-wide">Total XP</span>
+                      </div>
+                      <div className="text-xl font-bold text-gray-900">125k</div>
+                      <div className="text-xs text-gray-500 font-medium">Across organization</div>
+                    </div>
                   </div>
                   {/* Chart area */}
-                  <div className="flex-1 bg-white border border-gray-100 rounded-xl shadow-sm p-5 flex flex-col gap-4">
-                    <div className="h-4 w-32 bg-gray-800 rounded-md"></div>
-                    <div className="flex-1 flex items-end gap-2 pb-2">
+                  <div className="flex-1 bg-white border border-gray-100 rounded-xl shadow-sm p-5 flex flex-col gap-4 relative">
+                    <div className="flex justify-between items-center">
+                      <h4 className="text-sm font-semibold text-gray-800">Monthly Carbon Reduction</h4>
+                      <span className="text-xs text-gray-500">kg CO2e</span>
+                    </div>
+                    <div className="flex-1 flex items-end gap-3 pb-2 relative border-b border-gray-100">
+                      {/* Y-axis mock */}
+                      <div className="absolute left-0 top-0 bottom-0 flex flex-col justify-between text-[10px] text-gray-400 py-2">
+                        <span>100k</span>
+                        <span>50k</span>
+                        <span>0</span>
+                      </div>
+                      <div className="w-6"></div> {/* Spacer for y-axis */}
                       {[40, 70, 45, 90, 65, 85, 55, 100, 75, 60].map((h, idx) => (
-                        <div key={idx} className="flex-1 bg-gradient-to-t from-green-500 to-teal-400 rounded-t-sm" style={{ height: `${h}%` }}></div>
+                        <div key={idx} className="flex-1 relative group h-full flex items-end">
+                          <div className="w-full bg-gradient-to-t from-green-500 to-teal-400 rounded-t-md opacity-80 group-hover:opacity-100 transition-opacity" style={{ height: `${h}%` }}></div>
+                        </div>
                       ))}
+                    </div>
+                    {/* X-axis mock */}
+                    <div className="flex justify-between pl-9 text-[10px] text-gray-400">
+                      <span>Jan</span>
+                      <span>Feb</span>
+                      <span>Mar</span>
+                      <span>Apr</span>
+                      <span>May</span>
+                      <span>Jun</span>
                     </div>
                   </div>
                 </div>
@@ -329,19 +379,64 @@ export function AudienceTabs() {
           <div className="flex-1 bg-gray-100 border-l border-gray-200 relative overflow-hidden min-h-[300px] flex items-center justify-center p-8">
              <div className="absolute inset-0 bg-gradient-to-br from-transparent to-gray-200/50"></div>
              {/* Dynamic wireframe based on tab */}
-             <div className="w-full max-w-xs space-y-4 relative z-10">
-                <div className="h-4 w-1/3 bg-gray-300 rounded"></div>
-                <div className="h-32 w-full bg-white rounded-xl shadow-sm border border-gray-200 flex p-4 gap-3">
-                  <div className="w-12 h-12 rounded-full bg-gray-100"></div>
-                  <div className="flex-1 space-y-2">
-                    <div className="h-3 w-3/4 bg-gray-200 rounded"></div>
-                    <div className="h-2 w-1/2 bg-gray-100 rounded"></div>
-                    <div className={`mt-2 h-1.5 w-full bg-gray-100 rounded-full overflow-hidden`}>
-                      <div className={`h-full ${activeTab === 'admin' ? 'bg-purple-400 w-3/4' : activeTab === 'manager' ? 'bg-blue-400 w-1/2' : 'bg-green-400 w-5/6'}`}></div>
-                    </div>
-                  </div>
-                </div>
-                <div className="h-16 w-full bg-white rounded-xl shadow-sm border border-gray-200"></div>
+             <div className="w-full max-w-sm space-y-4 relative z-10 transition-all duration-300">
+               {activeTab === 'admin' && (
+                 <div className="bg-white rounded-xl shadow-lg border border-red-100 p-5 transform transition-all hover:-translate-y-1">
+                   <div className="flex items-start gap-4">
+                     <div className="flex-shrink-0 w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+                       <ShieldCheck className="h-5 w-5 text-red-600" />
+                     </div>
+                     <div className="flex-1">
+                       <div className="flex items-center gap-2 mb-1">
+                         <h4 className="text-sm font-bold text-gray-900">Compliance Alert</h4>
+                         <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-700">CRITICAL</span>
+                       </div>
+                       <p className="text-xs text-gray-600 mb-3">Annual Environmental Policy update is required for Q3 compliance.</p>
+                       <button className="text-xs font-semibold text-white bg-red-600 hover:bg-red-700 px-3 py-1.5 rounded-lg transition-colors">Review Now</button>
+                     </div>
+                   </div>
+                 </div>
+               )}
+
+               {activeTab === 'manager' && (
+                 <div className="bg-white rounded-xl shadow-lg border border-blue-100 p-5 transform transition-all hover:-translate-y-1">
+                   <h4 className="text-sm font-bold text-gray-900 mb-4 flex items-center gap-2">
+                     <Users className="h-4 w-4 text-blue-500" />
+                     Team Progress (Marketing)
+                   </h4>
+                   <div className="space-y-4">
+                     <div className="flex items-center gap-3">
+                       <div className="flex -space-x-2">
+                         <div className="w-8 h-8 rounded-full bg-blue-100 border-2 border-white flex items-center justify-center text-xs font-bold text-blue-700">JD</div>
+                         <div className="w-8 h-8 rounded-full bg-green-100 border-2 border-white flex items-center justify-center text-xs font-bold text-green-700">AS</div>
+                         <div className="w-8 h-8 rounded-full bg-purple-100 border-2 border-white flex items-center justify-center text-xs font-bold text-purple-700">MK</div>
+                       </div>
+                       <div className="flex-1">
+                         <div className="flex justify-between text-xs mb-1">
+                           <span className="font-medium text-gray-700">Department Goal</span>
+                           <span className="font-bold text-blue-600">82%</span>
+                         </div>
+                         <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
+                           <div className="h-full bg-blue-500 w-[82%]"></div>
+                         </div>
+                       </div>
+                     </div>
+                     <button className="w-full text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 py-2 rounded-lg transition-colors">View Team Report</button>
+                   </div>
+                 </div>
+               )}
+
+               {activeTab === 'employee' && (
+                 <div className="bg-white rounded-xl shadow-lg border border-amber-100 p-5 transform transition-all hover:-translate-y-1 text-center">
+                   <div className="mx-auto w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center mb-3">
+                     <Trophy className="h-8 w-8 text-amber-500" />
+                   </div>
+                   <h4 className="text-lg font-bold text-gray-900 mb-1">New Badge Earned!</h4>
+                   <p className="text-sm font-medium text-amber-600 mb-1">Carbon Saver Level 2 Unlocked</p>
+                   <div className="text-xs text-gray-500 font-semibold mb-4">+500 XP Awarded</div>
+                   <button className="text-xs font-semibold text-white bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg transition-colors w-full shadow-sm">Claim Reward</button>
+                 </div>
+               )}
              </div>
           </div>
         </div>
