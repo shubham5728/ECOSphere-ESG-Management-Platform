@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ClipboardCheck } from "lucide-react";
 import { api, getApiError } from "../../api/client";
 import { useAuth } from "../../store/AuthContext";
 
@@ -52,7 +53,9 @@ export default function ParticipationsPage() {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">📝 CSR Participations</h1>
+        <h1 className="flex items-center gap-2 text-2xl font-bold text-gray-900">
+          <ClipboardCheck className="text-green-600" /> CSR Participations
+        </h1>
         <p className="text-sm text-gray-500">Track and review employee participation entries for CSR drives.</p>
       </div>
 

@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
+import { ClipboardList } from "lucide-react";
 import type { FormEvent } from "react";
 import { api, getApiError } from "../../api/client";
 import { Button } from "../../components/ui/Button";
@@ -100,7 +101,9 @@ export default function CarbonLedgerPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">📋 Carbon Ledger</h1>
+          <h1 className="flex items-center gap-2 text-2xl font-bold text-gray-900">
+            <ClipboardList className="text-green-600" /> Carbon Ledger
+          </h1>
           <p className="text-sm text-gray-500">
             All carbon emission transactions — auto-calculated and manual.{" "}
             <span className="font-medium text-gray-700">{total} entries total.</span>

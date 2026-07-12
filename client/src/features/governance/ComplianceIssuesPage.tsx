@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ShieldAlert } from "lucide-react";
 import { api, getApiError } from "../../api/client";
 import { useAuth } from "../../store/AuthContext";
 import { Button } from "../../components/ui/Button";
@@ -92,7 +93,9 @@ export default function ComplianceIssuesPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">⚠️ Compliance Issues</h1>
+          <h1 className="flex items-center gap-2 text-2xl font-bold text-gray-900">
+            <ShieldAlert className="text-green-600" /> Compliance Issues
+          </h1>
           <p className="text-sm text-gray-500">Track regulatory, environmental, and workplace safety compliance violations.</p>
         </div>
         {isElevated && <Button onClick={() => setShowModal(true)}>+ Report Issue</Button>}
@@ -211,10 +214,10 @@ export default function ComplianceIssuesPage() {
                     onChange={(e) => setForm(f => ({ ...f, severity: e.target.value }))}
                     className="mt-1 w-full rounded border px-2 py-1.5 text-sm"
                   >
-                    <option value="LOW">🟢 LOW</option>
-                    <option value="MEDIUM">🟡 MEDIUM</option>
-                    <option value="HIGH">🟠 HIGH</option>
-                    <option value="CRITICAL">🔴 CRITICAL</option>
+                    <option value="LOW">LOW</option>
+                    <option value="MEDIUM">MEDIUM</option>
+                    <option value="HIGH">HIGH</option>
+                    <option value="CRITICAL">CRITICAL</option>
                   </select>
                 </div>
                 <div>

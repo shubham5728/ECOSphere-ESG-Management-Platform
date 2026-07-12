@@ -1,4 +1,15 @@
 import { useNavigate } from "react-router-dom";
+import {
+  Target,
+  Trees,
+  Gift,
+  ScrollText,
+  Trophy,
+  BarChart3,
+  Wind,
+  Award,
+  Calendar,
+} from "lucide-react";
 import { useAuth } from "../../../store/AuthContext";
 import {
   mockEmployeeKpis,
@@ -19,12 +30,12 @@ import { DonutChart } from "../charts/DonutChart";
 import { SimpleBarChart } from "../charts/SimpleBarChart";
 
 const QUICK_ACTIONS = [
-  { icon: "🎯", label: "View Challenges", to: "/challenges", color: "#7c3aed" },
-  { icon: "🌳", label: "CSR Activities", to: "/csr-activities", color: "#16a34a" },
-  { icon: "🎁", label: "Rewards Store", to: "/rewards-store", color: "#d97706" },
-  { icon: "📜", label: "Sign Policies", to: "/policy-acknowledgements", color: "#2563eb" },
-  { icon: "🏆", label: "Leaderboard", to: "/leaderboard", color: "#0d9488" },
-  { icon: "📊", label: "ESG Scores", to: "/esg-scores", color: "#ec4899" },
+  { icon: Target, label: "View Challenges", to: "/challenges", color: "#7c3aed" },
+  { icon: Trees, label: "CSR Activities", to: "/csr-activities", color: "#16a34a" },
+  { icon: Gift, label: "Rewards Store", to: "/rewards-store", color: "#d97706" },
+  { icon: ScrollText, label: "Sign Policies", to: "/policy-acknowledgements", color: "#2563eb" },
+  { icon: Trophy, label: "Leaderboard", to: "/leaderboard", color: "#0d9488" },
+  { icon: BarChart3, label: "ESG Scores", to: "/esg-scores", color: "#ec4899" },
 ];
 
 export function EmployeeDashboard() {
@@ -39,15 +50,15 @@ export function EmployeeDashboard() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
-            Welcome back, {user?.name?.split(" ")[0] ?? "there"} 👋
+            Welcome back, {user?.name?.split(" ")[0] ?? "there"}
           </h1>
           <p className="text-sm text-gray-500 mt-0.5">Your personal ESG progress dashboard</p>
         </div>
         <button
           onClick={() => navigate("/rewards-store")}
-          className="self-start rounded-lg bg-amber-500 px-4 py-1.5 text-sm font-medium text-white hover:bg-amber-600 transition-colors"
+          className="self-start flex items-center gap-1.5 rounded-lg bg-amber-500 px-4 py-1.5 text-sm font-medium text-white hover:bg-amber-600 transition-colors"
         >
-          🎁 Redeem Rewards
+          <Gift size={15} /> Redeem Rewards
         </button>
       </div>
 
@@ -64,21 +75,25 @@ export function EmployeeDashboard() {
           </div>
           <div className="text-center">
             <div className="text-4xl font-bold">{kpis.badgesEarned}</div>
-            <div className="text-sm text-white/70 mt-1">Badges Earned 🏅</div>
+            <div className="flex items-center justify-center gap-1 text-sm text-white/70 mt-1">
+              <Award size={14} /> Badges Earned
+            </div>
           </div>
           <div className="text-center">
             <div className="text-4xl font-bold">{kpis.rewardsAvailable}</div>
-            <div className="text-sm text-white/70 mt-1">Rewards Available 🎁</div>
+            <div className="flex items-center justify-center gap-1 text-sm text-white/70 mt-1">
+              <Gift size={14} /> Rewards Available
+            </div>
           </div>
         </div>
       </div>
 
       {/* ── KPI Cards ─────────────────────────────────────────────────── */}
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <KpiCard icon="🎯" label="Joined Challenges" value={kpis.joinedChallenges} accent="bg-purple-50" onClick={() => navigate("/challenges")} />
-        <KpiCard icon="🌳" label="CSR Completed" value={kpis.csrCompleted} accent="bg-green-50" delta={2} />
-        <KpiCard icon="📜" label="Policies Pending" value={kpis.policiesPending} accent="bg-amber-50" onClick={() => navigate("/policy-acknowledgements")} />
-        <KpiCard icon="💨" label="Carbon Savings" value={kpis.carbonSavings.toFixed(1)} unit="kgCO₂e" accent="bg-teal-50" delta={12} deltaLabel="vs last month" />
+        <KpiCard icon={Target} iconColor="text-purple-600" label="Joined Challenges" value={kpis.joinedChallenges} accent="bg-purple-50" onClick={() => navigate("/challenges")} />
+        <KpiCard icon={Trees} iconColor="text-green-600" label="CSR Completed" value={kpis.csrCompleted} accent="bg-green-50" delta={2} />
+        <KpiCard icon={ScrollText} iconColor="text-amber-600" label="Policies Pending" value={kpis.policiesPending} accent="bg-amber-50" onClick={() => navigate("/policy-acknowledgements")} />
+        <KpiCard icon={Wind} iconColor="text-teal-600" label="Carbon Savings" value={kpis.carbonSavings.toFixed(1)} unit="kgCO₂e" accent="bg-teal-50" delta={12} deltaLabel="vs last month" />
       </div>
 
       {/* ── Charts Row 1 ─────────────────────────────────────────────── */}
@@ -138,24 +153,31 @@ export function EmployeeDashboard() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <div className="rounded-2xl bg-white border border-gray-100 shadow-sm p-5">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-semibold text-gray-800">Leaderboard 🏆</h3>
+            <h3 className="flex items-center gap-1.5 text-sm font-semibold text-gray-800">
+              <Trophy size={16} className="text-amber-500" /> Leaderboard
+            </h3>
             <button onClick={() => navigate("/leaderboard")} className="text-xs text-green-600 hover:underline">Full board</button>
           </div>
           <LeaderboardTable entries={mockLeaderboard} />
         </div>
 
         <div className="rounded-2xl bg-white border border-gray-100 shadow-sm p-5">
-          <h3 className="text-sm font-semibold text-gray-800 mb-4">Upcoming CSR Events 📅</h3>
+          <h3 className="flex items-center gap-1.5 text-sm font-semibold text-gray-800 mb-4">
+            <Calendar size={16} className="text-gray-400" /> Upcoming CSR Events
+          </h3>
           <div className="space-y-3">
-            {mockUpcomingEvents.filter((e) => e.type === "CSR" || e.type === "Challenge").map((ev) => (
+            {mockUpcomingEvents.filter((e) => e.type === "CSR" || e.type === "Challenge").map((ev) => {
+              const EvIcon = ev.type === "CSR" ? Trees : Target;
+              return (
               <div key={ev.id} className="flex items-start gap-3 rounded-xl bg-gray-50 p-3">
-                <div className="text-xl flex-shrink-0 mt-0.5">{ev.type === "CSR" ? "🌳" : "🎯"}</div>
+                <div className="flex-shrink-0 mt-0.5 text-gray-500"><EvIcon size={18} /></div>
                 <div className="min-w-0">
                   <p className="text-sm font-medium text-gray-800 truncate">{ev.title}</p>
                   <p className="text-xs text-gray-400">{ev.date} · {ev.dept}</p>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

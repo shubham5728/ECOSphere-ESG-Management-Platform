@@ -1,5 +1,20 @@
 import { useNavigate } from "react-router-dom";
 import {
+  Globe,
+  HeartHandshake,
+  Scale,
+  Building2,
+  Users,
+  Trees,
+  Target,
+  Factory,
+  ShieldAlert,
+  ScrollText,
+  Star,
+  Trophy,
+  Calendar,
+} from "lucide-react";
+import {
   mockAdminKpis,
   mockRadarData,
   mockDeptEsgData,
@@ -73,12 +88,14 @@ export function AdminDashboard() {
           </div>
           {/* E / S / G sub-scores */}
           {[
-            { label: "Environmental", score: kpis.envScore, icon: "🌍" },
-            { label: "Social", score: kpis.socialScore, icon: "🤝" },
-            { label: "Governance", score: kpis.govScore, icon: "⚖️" },
-          ].map((s) => (
+            { label: "Environmental", score: kpis.envScore, icon: Globe },
+            { label: "Social", score: kpis.socialScore, icon: HeartHandshake },
+            { label: "Governance", score: kpis.govScore, icon: Scale },
+          ].map((s) => {
+            const Icon = s.icon;
+            return (
             <div key={s.label} className="flex flex-col items-center text-center">
-              <div className="text-3xl mb-1">{s.icon}</div>
+              <Icon size={26} className="mb-1.5 text-white/90" strokeWidth={2} />
               <div className="text-4xl font-bold">{s.score}</div>
               <div className="text-sm text-white/70 mt-1">{s.label}</div>
               {/* Mini progress bar */}
@@ -89,20 +106,21 @@ export function AdminDashboard() {
                 />
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
       {/* ── KPI Cards Row ─────────────────────────────────────────────── */}
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-4">
-        <KpiCard icon="🏢" label="Departments" value={kpis.totalDepartments} accent="bg-blue-50" onClick={() => navigate("/departments")} />
-        <KpiCard icon="👥" label="Total Employees" value={kpis.totalEmployees} accent="bg-teal-50" onClick={() => navigate("/users")} />
-        <KpiCard icon="🌳" label="Active CSR Activities" value={kpis.activeCsr} accent="bg-green-50" delta={8} onClick={() => navigate("/csr-activities")} />
-        <KpiCard icon="🎯" label="Active Challenges" value={kpis.activeChallenges} accent="bg-purple-50" onClick={() => navigate("/challenges")} />
-        <KpiCard icon="🏭" label="Total CO₂ Emissions" value={kpis.totalEmissions.toFixed(0)} unit="kgCO₂e" accent="bg-red-50" delta={-6} deltaLabel="reduced vs last month" />
-        <KpiCard icon="⚠️" label="Compliance Issues" value={kpis.complianceIssues} accent="bg-orange-50" onClick={() => navigate("/compliance-issues")} />
-        <KpiCard icon="📜" label="Pending Policies" value={kpis.pendingPolicies} accent="bg-amber-50" onClick={() => navigate("/policy-acknowledgements")} />
-        <KpiCard icon="⭐" label="ESG Score" value={kpis.esgScore} unit="/ 100" accent="bg-green-50" delta={3} />
+        <KpiCard icon={Building2} iconColor="text-blue-600" label="Departments" value={kpis.totalDepartments} accent="bg-blue-50" onClick={() => navigate("/departments")} />
+        <KpiCard icon={Users} iconColor="text-teal-600" label="Total Employees" value={kpis.totalEmployees} accent="bg-teal-50" onClick={() => navigate("/users")} />
+        <KpiCard icon={Trees} iconColor="text-green-600" label="Active CSR Activities" value={kpis.activeCsr} accent="bg-green-50" delta={8} onClick={() => navigate("/csr-activities")} />
+        <KpiCard icon={Target} iconColor="text-purple-600" label="Active Challenges" value={kpis.activeChallenges} accent="bg-purple-50" onClick={() => navigate("/challenges")} />
+        <KpiCard icon={Factory} iconColor="text-red-600" label="Total CO₂ Emissions" value={kpis.totalEmissions.toFixed(0)} unit="kgCO₂e" accent="bg-red-50" delta={-6} deltaLabel="reduced vs last month" />
+        <KpiCard icon={ShieldAlert} iconColor="text-orange-600" label="Compliance Issues" value={kpis.complianceIssues} accent="bg-orange-50" onClick={() => navigate("/compliance-issues")} />
+        <KpiCard icon={ScrollText} iconColor="text-amber-600" label="Pending Policies" value={kpis.pendingPolicies} accent="bg-amber-50" onClick={() => navigate("/policy-acknowledgements")} />
+        <KpiCard icon={Star} iconColor="text-green-600" label="ESG Score" value={kpis.esgScore} unit="/ 100" accent="bg-green-50" delta={3} />
       </div>
 
       {/* ── Charts Row 1 ─────────────────────────────────────────────── */}
@@ -154,7 +172,9 @@ export function AdminDashboard() {
         {/* Leaderboard */}
         <div className="rounded-2xl bg-white border border-gray-100 shadow-sm p-5 lg:col-span-1">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-semibold text-gray-800">Top Employees 🏆</h3>
+            <h3 className="flex items-center gap-1.5 text-sm font-semibold text-gray-800">
+              <Trophy size={16} className="text-amber-500" /> Top Employees
+            </h3>
             <button onClick={() => navigate("/leaderboard")} className="text-xs text-green-600 hover:underline">View all</button>
           </div>
           <LeaderboardTable entries={mockLeaderboard} />
@@ -162,7 +182,9 @@ export function AdminDashboard() {
 
         {/* Upcoming Events */}
         <div className="rounded-2xl bg-white border border-gray-100 shadow-sm p-5 lg:col-span-1">
-          <h3 className="text-sm font-semibold text-gray-800 mb-4">Upcoming Events 📅</h3>
+          <h3 className="flex items-center gap-1.5 text-sm font-semibold text-gray-800 mb-4">
+            <Calendar size={16} className="text-gray-400" /> Upcoming Events
+          </h3>
           <div className="space-y-3">
             {mockUpcomingEvents.map((ev) => (
               <div key={ev.id} className="flex items-start gap-3 rounded-xl bg-gray-50 p-3">

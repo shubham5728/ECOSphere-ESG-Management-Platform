@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
+import { Gift, Award, Lock } from "lucide-react";
 import { api, getApiError } from "../../api/client";
 import { useAuth } from "../../store/AuthContext";
 
@@ -71,12 +72,14 @@ export default function RewardsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">🎁 Rewards Store & Badges</h1>
+          <h1 className="flex items-center gap-2 text-2xl font-bold text-gray-900">
+            <Gift className="text-amber-500" /> Rewards Store & Badges
+          </h1>
           <p className="text-sm text-gray-500">Spend points to redeem sustainable corporate perks, and view unlocked achievements.</p>
         </div>
         <div className="rounded-lg bg-amber-50 px-4 py-2 border border-amber-250 text-right">
           <p className="text-[10px] uppercase font-semibold text-amber-600">Your points balance</p>
-          <p className="text-lg font-bold text-amber-800">🎁 {user?.points ?? 0} Pts</p>
+          <p className="flex items-center justify-end gap-1.5 text-lg font-bold text-amber-800"><Gift size={16} /> {user?.points ?? 0} Pts</p>
         </div>
       </div>
 
@@ -97,7 +100,7 @@ export default function RewardsPage() {
                     <p className="text-xs text-gray-500 mt-1 line-clamp-2">{r.description}</p>
                     <div className="mt-3 flex items-center justify-between text-xs">
                       <span className="text-gray-400">Stock: {r.stock} remaining</span>
-                      <span className="font-bold text-amber-600">🎁 {r.pointsRequired} Pts</span>
+                      <span className="inline-flex items-center gap-1 font-bold text-amber-600"><Gift size={13} /> {r.pointsRequired} Pts</span>
                     </div>
                   </div>
                   <button
@@ -144,12 +147,12 @@ export default function RewardsPage() {
 
         {/* Badges Panel */}
         <div className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm h-fit">
-          <h2 className="text-sm font-semibold text-gray-700 mb-4">🎖️ Unlocked Badges</h2>
+          <h2 className="flex items-center gap-1.5 text-sm font-semibold text-gray-700 mb-4"><Award size={16} className="text-amber-500" /> Unlocked Badges</h2>
           {loading ? (
             <p className="text-xs text-gray-400">Loading achievements...</p>
           ) : badges.length === 0 ? (
             <div className="text-center py-6">
-              <span className="text-3xl">🔒</span>
+              <Lock size={30} className="mx-auto text-gray-300" />
               <p className="text-xs text-gray-400 mt-2">No achievements unlocked yet. Finish challenges and CSR tasks to earn badges!</p>
             </div>
           ) : (

@@ -1,5 +1,22 @@
 import { useNavigate } from "react-router-dom";
 import {
+  Star,
+  Factory,
+  ClipboardList,
+  ClipboardCheck,
+  Trees,
+  Target,
+  TrendingUp,
+  PenLine,
+  Scale,
+  BarChart3,
+  FileSignature,
+  FileSearch,
+  Calendar,
+  ScrollText,
+  type LucideIcon,
+} from "lucide-react";
+import {
   mockManagerKpis,
   mockDeptEsgTrend,
   mockTeamParticipation,
@@ -22,15 +39,23 @@ import {
 } from "recharts";
 
 const QUICK_ACTIONS = [
-  { icon: "📝", label: "Log Activity", to: "/operations", color: "#16a34a" },
-  { icon: "🌳", label: "CSR Activities", to: "/csr-activities", color: "#0d9488" },
-  { icon: "✅", label: "Review Submissions", to: "/participations", color: "#2563eb" },
-  { icon: "📋", label: "Carbon Ledger", to: "/carbon-ledger", color: "#7c3aed" },
-  { icon: "⚖️", label: "Compliance Issues", to: "/compliance-issues", color: "#d97706" },
-  { icon: "📊", label: "Social Metrics", to: "/social-metrics", color: "#ec4899" },
-  { icon: "📜", label: "Policy Sign-off", to: "/policy-acknowledgements", color: "#6366f1" },
-  { icon: "🔍", label: "Audit Logs", to: "/audits", color: "#14b8a6" },
+  { icon: PenLine, label: "Log Activity", to: "/operations", color: "#16a34a" },
+  { icon: Trees, label: "CSR Activities", to: "/csr-activities", color: "#0d9488" },
+  { icon: ClipboardCheck, label: "Review Submissions", to: "/participations", color: "#2563eb" },
+  { icon: ClipboardList, label: "Carbon Ledger", to: "/carbon-ledger", color: "#7c3aed" },
+  { icon: Scale, label: "Compliance Issues", to: "/compliance-issues", color: "#d97706" },
+  { icon: BarChart3, label: "Social Metrics", to: "/social-metrics", color: "#ec4899" },
+  { icon: FileSignature, label: "Policy Sign-off", to: "/policy-acknowledgements", color: "#6366f1" },
+  { icon: FileSearch, label: "Audit Logs", to: "/audits", color: "#14b8a6" },
 ];
+
+// Icon for an event row based on its type.
+function eventIcon(type: string): LucideIcon {
+  if (type === "CSR") return Trees;
+  if (type === "Audit") return FileSearch;
+  if (type === "Challenge") return Target;
+  return ScrollText;
+}
 
 export function ManagerDashboard() {
   const navigate = useNavigate();
@@ -76,12 +101,12 @@ export function ManagerDashboard() {
 
       {/* ── KPIs ──────────────────────────────────────────────────────── */}
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-        <KpiCard icon="⭐" label="Dept ESG Score" value={kpis.deptEsgScore} unit="/ 100" accent="bg-teal-50" delta={3} />
-        <KpiCard icon="🏭" label="Dept Emissions" value={kpis.deptEmissions.toFixed(0)} unit="kgCO₂e" accent="bg-red-50" delta={-4} />
-        <KpiCard icon="📋" label="Pending Approvals" value={kpis.pendingApprovals} accent="bg-amber-50" onClick={() => navigate("/participations")} />
-        <KpiCard icon="🌳" label="CSR Participation" value={`${kpis.csrParticipation}%`} accent="bg-green-50" />
-        <KpiCard icon="🎯" label="Active Challenges" value={kpis.activeChallenges} accent="bg-purple-50" onClick={() => navigate("/challenges")} />
-        <KpiCard icon="📈" label="Goal Completion" value={`${kpis.goalCompletion}%`} accent="bg-blue-50" />
+        <KpiCard icon={Star} iconColor="text-teal-600" label="Dept ESG Score" value={kpis.deptEsgScore} unit="/ 100" accent="bg-teal-50" delta={3} />
+        <KpiCard icon={Factory} iconColor="text-red-600" label="Dept Emissions" value={kpis.deptEmissions.toFixed(0)} unit="kgCO₂e" accent="bg-red-50" delta={-4} />
+        <KpiCard icon={ClipboardList} iconColor="text-amber-600" label="Pending Approvals" value={kpis.pendingApprovals} accent="bg-amber-50" onClick={() => navigate("/participations")} />
+        <KpiCard icon={Trees} iconColor="text-green-600" label="CSR Participation" value={`${kpis.csrParticipation}%`} accent="bg-green-50" />
+        <KpiCard icon={Target} iconColor="text-purple-600" label="Active Challenges" value={kpis.activeChallenges} accent="bg-purple-50" onClick={() => navigate("/challenges")} />
+        <KpiCard icon={TrendingUp} iconColor="text-blue-600" label="Goal Completion" value={`${kpis.goalCompletion}%`} accent="bg-blue-50" />
       </div>
 
       {/* ── Charts Row 1 ─────────────────────────────────────────────── */}
@@ -125,18 +150,23 @@ export function ManagerDashboard() {
 
         {/* Upcoming events */}
         <div className="rounded-2xl bg-white border border-gray-100 shadow-sm p-5">
-          <h3 className="text-sm font-semibold text-gray-800 mb-4">Upcoming Events 📅</h3>
+          <h3 className="flex items-center gap-1.5 text-sm font-semibold text-gray-800 mb-4">
+            <Calendar size={16} className="text-gray-400" /> Upcoming Events
+          </h3>
           <div className="space-y-3">
-            {mockUpcomingEvents.slice(0, 4).map((ev) => (
+            {mockUpcomingEvents.slice(0, 4).map((ev) => {
+              const EvIcon = eventIcon(ev.type);
+              return (
               <div key={ev.id} className="flex items-center gap-3 rounded-xl bg-gray-50 p-3">
-                <div className="flex-shrink-0 text-lg">{ev.type === "CSR" ? "🌳" : ev.type === "Audit" ? "🔍" : ev.type === "Challenge" ? "🎯" : "📜"}</div>
+                <div className="flex-shrink-0 text-gray-500"><EvIcon size={18} /></div>
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-medium text-gray-800 truncate">{ev.title}</p>
                   <p className="text-xs text-gray-400">{ev.date}</p>
                 </div>
                 <span className="text-xs text-gray-400 flex-shrink-0">{ev.type}</span>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

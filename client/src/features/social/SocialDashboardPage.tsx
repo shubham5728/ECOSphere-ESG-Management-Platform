@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { HeartHandshake, Trees, Clock, Users, BookOpen, type LucideIcon } from "lucide-react";
 import { api, getApiError } from "../../api/client";
 
 interface Summary {
@@ -56,24 +57,29 @@ export default function SocialDashboardPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">🤝 Social Dashboard</h1>
+        <h1 className="flex items-center gap-2 text-2xl font-bold text-gray-900">
+          <HeartHandshake className="text-green-600" /> Social Dashboard
+        </h1>
         <p className="text-sm text-gray-500 mt-1">CSR activities, employee volunteering, and diversity metrics.</p>
       </div>
 
       {/* Summary Stats */}
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        {[
-          { label: "Active CSR Activities", value: data.summary.totalActivities, icon: "🌳" },
-          { label: "Total Volunteering Hours", value: `${data.summary.totalVolunteerHours} hrs`, icon: "⏳" },
-          { label: "Female Ratio", value: `${data.summary.genderRatioPct}%`, icon: "👥" },
-          { label: "Avg Training", value: `${data.summary.avgTrainingHours} hrs`, icon: "📚" }
-        ].map((c, i) => (
+        {([
+          { label: "Active CSR Activities", value: data.summary.totalActivities, icon: Trees, color: "text-green-600" },
+          { label: "Total Volunteering Hours", value: `${data.summary.totalVolunteerHours} hrs`, icon: Clock, color: "text-teal-600" },
+          { label: "Female Ratio", value: `${data.summary.genderRatioPct}%`, icon: Users, color: "text-blue-600" },
+          { label: "Avg Training", value: `${data.summary.avgTrainingHours} hrs`, icon: BookOpen, color: "text-purple-600" }
+        ] as { label: string; value: string | number; icon: LucideIcon; color: string }[]).map((c, i) => {
+          const Icon = c.icon;
+          return (
           <div key={i} className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm">
-            <div className="text-xl">{c.icon}</div>
+            <Icon size={22} className={c.color} />
             <p className="mt-1 text-xs text-gray-400 font-medium uppercase">{c.label}</p>
             <p className="text-lg font-bold text-gray-900 mt-0.5">{c.value}</p>
           </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">

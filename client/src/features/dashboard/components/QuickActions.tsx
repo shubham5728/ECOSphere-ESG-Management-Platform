@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
+import type { LucideIcon } from "lucide-react";
 
 interface QuickAction {
-  icon: string;
+  icon: LucideIcon;
   label: string;
   to: string;
   color: string;
@@ -15,24 +16,27 @@ export function QuickActions({ actions }: QuickActionsProps) {
   const navigate = useNavigate();
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-      {actions.map((a) => (
-        <button
-          key={a.to}
-          onClick={() => navigate(a.to)}
-          className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm
-            hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group"
-        >
-          <div
-            className="flex h-11 w-11 items-center justify-center rounded-xl text-xl"
-            style={{ background: `${a.color}15` }}
+      {actions.map((a) => {
+        const Icon = a.icon;
+        return (
+          <button
+            key={a.to}
+            onClick={() => navigate(a.to)}
+            className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm
+              hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group"
           >
-            {a.icon}
-          </div>
-          <span className="text-xs font-semibold text-gray-700 text-center leading-tight group-hover:text-green-700">
-            {a.label}
-          </span>
-        </button>
-      ))}
+            <div
+              className="flex h-11 w-11 items-center justify-center rounded-xl"
+              style={{ background: `${a.color}15` }}
+            >
+              <Icon size={20} style={{ color: a.color }} strokeWidth={2} />
+            </div>
+            <span className="text-xs font-semibold text-gray-700 text-center leading-tight group-hover:text-green-700">
+              {a.label}
+            </span>
+          </button>
+        );
+      })}
     </div>
   );
 }

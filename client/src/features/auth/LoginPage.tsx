@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
+import { Leaf } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../store/AuthContext";
 import { getApiError } from "../../api/client";
@@ -89,8 +90,8 @@ export function AuthLayout({
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-brand-50 to-white p-4">
       <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl ring-1 ring-gray-100">
         <div className="mb-6 text-center">
-          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-brand-600 text-2xl">
-            🌱
+          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-brand-600 text-white">
+            <Leaf size={26} strokeWidth={2.2} />
           </div>
           <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
           <p className="text-sm text-gray-500">{subtitle}</p>

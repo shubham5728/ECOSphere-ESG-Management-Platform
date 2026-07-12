@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import type { FormEvent } from "react";
+import { Factory, ShoppingCart, CreditCard, Truck, BarChart3, type LucideIcon } from "lucide-react";
 import { api, getApiError } from "../../api/client";
 import { Button } from "../../components/ui/Button";
 
@@ -27,11 +28,11 @@ interface OperationalRecord {
 }
 
 const TYPES = ["PURCHASE", "MANUFACTURING", "EXPENSE", "FLEET"] as const;
-const TYPE_ICON: Record<string, string> = {
-  PURCHASE: "🛒",
-  MANUFACTURING: "🏭",
-  EXPENSE: "💳",
-  FLEET: "🚛",
+const TYPE_ICON: Record<string, LucideIcon> = {
+  PURCHASE: ShoppingCart,
+  MANUFACTURING: Factory,
+  EXPENSE: CreditCard,
+  FLEET: Truck,
 };
 
 const emptyForm = {
@@ -123,7 +124,9 @@ export default function OperationsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">🏭 Operational Records</h1>
+          <h1 className="flex items-center gap-2 text-2xl font-bold text-gray-900">
+            <Factory className="text-green-600" /> Operational Records
+          </h1>
           <p className="text-sm text-gray-500">Log activities that generate carbon emissions.</p>
         </div>
         <Button onClick={() => setShowModal(true)}>+ Log Activity</Button>
@@ -159,8 +162,7 @@ export default function OperationsPage() {
               {records.map((r) => (
                 <tr key={r.id} className="hover:bg-gray-50/50">
                   <td className="px-4 py-3">
-                    <span className="text-base">{TYPE_ICON[r.type]}</span>{" "}
-                    <span className="text-xs text-gray-500">{r.type}</span>
+                    {(() => { const T = TYPE_ICON[r.type] ?? BarChart3; return <span className="inline-flex items-center gap-1.5 text-xs text-gray-500"><T size={16} className="text-gray-500" /> {r.type}</span>; })()}
                   </td>
                   <td className="px-4 py-3 text-gray-800 max-w-[200px] truncate">{r.description}</td>
                   <td className="px-4 py-3 text-gray-700">{r.quantity} {r.unit}</td>
@@ -228,7 +230,7 @@ export default function OperationsPage() {
                     required
                   >
                     {TYPES.map((t) => (
-                      <option key={t} value={t}>{TYPE_ICON[t]} {t}</option>
+                      <option key={t} value={t}>{t}</option>
                     ))}
                   </select>
                 </div>
@@ -306,8 +308,8 @@ export default function OperationsPage() {
               </div>
 
               {estimatedEmissions && (
-                <div className="rounded-lg bg-green-50 px-3 py-2 text-sm text-green-700">
-                  📊 Estimated CO₂: <strong>{estimatedEmissions} kgCO₂e</strong>
+                <div className="flex items-center gap-1.5 rounded-lg bg-green-50 px-3 py-2 text-sm text-green-700">
+                  <BarChart3 size={15} /> Estimated CO₂: <strong>{estimatedEmissions} kgCO₂e</strong>
                   {" "}(auto-created if <em>autoEmission</em> is enabled in Settings)
                 </div>
               )}

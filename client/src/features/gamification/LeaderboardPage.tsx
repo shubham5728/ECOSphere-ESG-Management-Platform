@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Trophy, Users, Building2, Medal, Zap, Gift } from "lucide-react";
 import { api, getApiError } from "../../api/client";
 
 interface EmployeeRank {
@@ -43,7 +44,9 @@ export default function LeaderboardPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">🏆 ESG Leaderboards</h1>
+        <h1 className="flex items-center gap-2 text-2xl font-bold text-gray-900">
+          <Trophy className="text-amber-500" /> ESG Leaderboards
+        </h1>
         <p className="text-sm text-gray-500 mt-1">Real-time performance ranking of employees and departments based on ESG participation.</p>
       </div>
 
@@ -54,7 +57,7 @@ export default function LeaderboardPage() {
             tab === "EMPLOYEES" ? "border-brand-600 text-brand-600" : "border-transparent text-gray-500 hover:text-gray-900"
           }`}
         >
-          👤 Top Employees
+          <span className="inline-flex items-center gap-1.5"><Users size={15} /> Top Employees</span>
         </button>
         <button
           onClick={() => setTab("DEPARTMENTS")}
@@ -62,7 +65,7 @@ export default function LeaderboardPage() {
             tab === "DEPARTMENTS" ? "border-brand-600 text-brand-600" : "border-transparent text-gray-500 hover:text-gray-900"
           }`}
         >
-          🏢 Department Ranking
+          <span className="inline-flex items-center gap-1.5"><Building2 size={15} /> Department Ranking</span>
         </button>
       </div>
 
@@ -85,12 +88,14 @@ export default function LeaderboardPage() {
                 {data.employees.map((emp, index) => (
                   <tr key={emp.id} className="hover:bg-gray-50/50">
                     <td className="px-5 py-3.5 font-bold text-gray-400">
-                      {index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : `#${index + 1}`}
+                      {index < 3 ? (
+                        <Medal size={18} className={index === 0 ? "text-amber-400" : index === 1 ? "text-gray-400" : "text-orange-400"} />
+                      ) : `#${index + 1}`}
                     </td>
                     <td className="px-5 py-3.5 font-semibold text-gray-900">{emp.name}</td>
                     <td className="px-5 py-3.5 text-xs text-gray-500">{emp.department?.name || "Unassigned"}</td>
-                    <td className="px-5 py-3.5 font-mono font-bold text-brand-600">⚡ {emp.xp}</td>
-                    <td className="px-5 py-3.5 font-mono text-amber-600">🎁 {emp.points}</td>
+                    <td className="px-5 py-3.5 font-mono font-bold text-brand-600"><span className="inline-flex items-center gap-1"><Zap size={13} /> {emp.xp}</span></td>
+                    <td className="px-5 py-3.5 font-mono text-amber-600"><span className="inline-flex items-center gap-1"><Gift size={13} /> {emp.points}</span></td>
                   </tr>
                 ))}
               </tbody>
@@ -113,11 +118,11 @@ export default function LeaderboardPage() {
                 {data.departments.map((dept, index) => (
                   <tr key={dept.id} className="hover:bg-gray-50/50">
                     <td className="px-5 py-3.5 font-bold text-gray-400">
-                      {index === 0 ? "🏆" : `#${index + 1}`}
+                      {index === 0 ? <Trophy size={18} className="text-amber-400" /> : `#${index + 1}`}
                     </td>
                     <td className="px-5 py-3.5 font-semibold text-gray-900">{dept.name}</td>
                     <td className="px-5 py-3.5 text-xs font-mono text-gray-500">{dept.code}</td>
-                    <td className="px-5 py-3.5 font-mono font-bold text-brand-600">⚡ {dept.totalXp}</td>
+                    <td className="px-5 py-3.5 font-mono font-bold text-brand-600"><span className="inline-flex items-center gap-1"><Zap size={13} /> {dept.totalXp}</span></td>
                   </tr>
                 ))}
               </tbody>

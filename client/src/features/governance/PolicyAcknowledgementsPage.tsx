@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ScrollText, CheckCircle2, AlertTriangle } from "lucide-react";
 import { api, getApiError } from "../../api/client";
 
 interface Policy {
@@ -55,7 +56,9 @@ export default function PolicyAcknowledgementsPage() {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">📜 Policy Acknowledgements</h1>
+        <h1 className="flex items-center gap-2 text-2xl font-bold text-gray-900">
+          <ScrollText className="text-green-600" /> Policy Acknowledgements
+        </h1>
         <p className="text-sm text-gray-500">Read and sign off on our ESG guidelines and ethical standards policies.</p>
       </div>
 
@@ -85,10 +88,10 @@ export default function PolicyAcknowledgementsPage() {
                 <div className="mt-5 pt-3 border-t border-gray-50 flex items-center justify-between">
                   {isAcked ? (
                     <span className="text-xs text-green-600 font-semibold flex items-center gap-1">
-                      ✅ Acknowledged on {new Date(ackDate!).toLocaleDateString()}
+                      <CheckCircle2 size={13} /> Acknowledged on {new Date(ackDate!).toLocaleDateString()}
                     </span>
                   ) : (
-                    <span className="text-xs text-amber-500 font-medium">⚠️ Sign-off required</span>
+                    <span className="text-xs text-amber-500 font-medium flex items-center gap-1"><AlertTriangle size={13} /> Sign-off required</span>
                   )}
 
                   {!isAcked && (

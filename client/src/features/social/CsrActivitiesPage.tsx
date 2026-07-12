@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
+import { Trees, Zap, Gift, MapPin } from "lucide-react";
 import { api, getApiError } from "../../api/client";
 import { Button } from "../../components/ui/Button";
 
@@ -103,7 +104,9 @@ export default function CsrActivitiesPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">🌳 CSR Activities</h1>
+          <h1 className="flex items-center gap-2 text-2xl font-bold text-gray-900">
+            <Trees className="text-green-600" /> CSR Activities
+          </h1>
           <p className="text-sm text-gray-500">View and participate in corporate social responsibility drives.</p>
         </div>
         <Button onClick={() => setShowModal(true)}>+ New CSR Activity</Button>
@@ -137,9 +140,9 @@ export default function CsrActivitiesPage() {
                 <h3 className="text-base font-semibold text-gray-900 mt-2">{a.title}</h3>
                 <p className="text-xs text-gray-500 mt-1 line-clamp-3">{a.description}</p>
                 <div className="mt-4 flex flex-wrap gap-2">
-                  <span className="bg-green-50 text-green-700 text-xs px-2 py-0.5 rounded">⚡ {a.xpReward} XP</span>
-                  <span className="bg-amber-50 text-amber-700 text-xs px-2 py-0.5 rounded">🎁 {a.pointsReward} Pts</span>
-                  {a.location && <span className="bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded">📍 {a.location}</span>}
+                  <span className="inline-flex items-center gap-1 bg-green-50 text-green-700 text-xs px-2 py-0.5 rounded"><Zap size={12} /> {a.xpReward} XP</span>
+                  <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-700 text-xs px-2 py-0.5 rounded"><Gift size={12} /> {a.pointsReward} Pts</span>
+                  {a.location && <span className="inline-flex items-center gap-1 bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded"><MapPin size={12} /> {a.location}</span>}
                 </div>
               </div>
               <div className="mt-5 pt-3 border-t border-gray-50 flex items-center justify-between">

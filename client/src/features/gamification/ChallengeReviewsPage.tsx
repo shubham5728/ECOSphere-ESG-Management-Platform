@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ClipboardCheck, Zap, Gift } from "lucide-react";
 import { api, getApiError } from "../../api/client";
 import { useAuth } from "../../store/AuthContext";
 
@@ -50,7 +51,9 @@ export default function ChallengeReviewsPage() {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">📝 Challenge Reviews</h1>
+        <h1 className="flex items-center gap-2 text-2xl font-bold text-gray-900">
+          <ClipboardCheck className="text-green-600" /> Challenge Reviews
+        </h1>
         <p className="text-sm text-gray-500">Approve or reject employee green challenge completions to reward XP and Points.</p>
       </div>
 
@@ -77,7 +80,7 @@ export default function ChallengeReviewsPage() {
                   <td className="px-4 py-3 font-medium">{s.user.name}</td>
                   <td className="px-4 py-3">
                     <p className="font-semibold text-gray-900">{s.challenge.title}</p>
-                    <p className="text-[10px] text-gray-400">⚡ {s.challenge.xpReward} XP · 🎁 {s.challenge.pointsReward} Pts</p>
+                    <p className="flex items-center gap-1 text-[10px] text-gray-400"><Zap size={11} /> {s.challenge.xpReward} XP · <Gift size={11} /> {s.challenge.pointsReward} Pts</p>
                   </td>
                   <td className="px-4 py-3">
                     <p className="text-xs text-gray-800">{s.proofNote || "No notes"}</p>

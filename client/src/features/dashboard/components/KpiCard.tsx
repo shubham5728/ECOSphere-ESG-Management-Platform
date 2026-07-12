@@ -1,22 +1,26 @@
+import { ArrowUpRight, ArrowDownRight, ArrowRight, type LucideIcon } from "lucide-react";
+
 interface KpiCardProps {
-  icon: string;
+  icon: LucideIcon;
   label: string;
   value: string | number;
   unit?: string;
   delta?: number;       // positive = up, negative = down
   deltaLabel?: string;
-  accent?: string;      // tailwind bg class for icon bg
+  accent?: string;      // tailwind bg class for icon tile
+  iconColor?: string;   // tailwind text color for the icon
   onClick?: () => void;
 }
 
 export function KpiCard({
-  icon,
+  icon: Icon,
   label,
   value,
   unit,
   delta,
   deltaLabel,
   accent = "bg-green-50",
+  iconColor = "text-gray-700",
   onClick,
 }: KpiCardProps) {
   const isPositive = delta !== undefined && delta >= 0;
@@ -29,8 +33,8 @@ export function KpiCard({
         ${hasClick ? "cursor-pointer hover:shadow-md hover:-translate-y-0.5 hover:border-green-200" : ""}`}
     >
       {/* Icon */}
-      <div className={`inline-flex h-11 w-11 items-center justify-center rounded-xl text-xl ${accent} mb-3`}>
-        {icon}
+      <div className={`inline-flex h-11 w-11 items-center justify-center rounded-xl ${accent} mb-3`}>
+        <Icon size={20} className={iconColor} strokeWidth={2} />
       </div>
 
       {/* Value */}
@@ -45,14 +49,17 @@ export function KpiCard({
       {/* Delta */}
       {delta !== undefined && (
         <div className={`mt-2 flex items-center gap-1 text-xs font-medium ${isPositive ? "text-green-600" : "text-red-500"}`}>
-          <span>{isPositive ? "▲" : "▼"}</span>
+          {isPositive ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
           <span>{Math.abs(delta)}% {deltaLabel ?? "vs last month"}</span>
         </div>
       )}
 
       {/* Hover arrow */}
       {hasClick && (
-        <span className="absolute right-4 top-4 text-gray-200 text-sm group-hover:text-green-400 transition-colors">→</span>
+        <ArrowRight
+          size={16}
+          className="absolute right-4 top-4 text-gray-200 group-hover:text-green-400 transition-colors"
+        />
       )}
     </div>
   );

@@ -10,37 +10,75 @@
 .appshell-sidebar {
   display: flex;
   flex-direction: column;
-  width: 240px;
+  width: 244px;
   flex-shrink: 0;
-  background: #fff;
+  background: #ffffff;
   border-right: 1px solid #e5e7eb;
   overflow: hidden;
-  transition: transform 0.25s ease;
+  transition: width 0.2s ease, transform 0.25s ease;
   z-index: 200;
+}
+
+/* Collapsed (mini rail) mode — desktop only */
+.appshell-sidebar--collapsed {
+  width: 72px;
 }
 
 .appshell-sidebar-header {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 16px 20px;
+  padding: 16px 16px;
   border-bottom: 1px solid #f3f4f6;
   flex-shrink: 0;
+  min-height: 61px;
+}
+.appshell-sidebar--collapsed .appshell-sidebar-header {
+  justify-content: center;
+  padding: 16px 8px;
 }
 
 .appshell-logo-icon { color: #16a34a; flex-shrink: 0; }
-.appshell-logo-text { font-size: 1.1rem; font-weight: 700; color: #111827; flex: 1; }
+.appshell-logo-text {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #111827;
+  flex: 1;
+}
 
 /* Nav icons keep their size and never squish. */
 .appshell-nav-icon { flex-shrink: 0; color: currentColor; }
 .appshell-nav-group-icon { flex-shrink: 0; }
+
+/* Collapse toggle (desktop) */
+.appshell-collapse-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #9ca3af;
+  padding: 4px;
+  border-radius: 6px;
+  transition: background 0.12s, color 0.12s;
+}
+.appshell-collapse-btn:hover { background: #f3f4f6; color: #374151; }
+.appshell-sidebar--collapsed .appshell-collapse-btn { display: none; }
+
+/* When collapsed, clicking the logo area shouldn't hide the expand affordance;
+   show the collapse button again on hover of header */
+.appshell-sidebar--collapsed:hover .appshell-collapse-btn {
+  display: flex;
+  position: absolute;
+}
 
 /* Close button only visible on mobile */
 .appshell-sidebar-close {
   display: none;
   background: none;
   border: none;
-  font-size: 1rem;
   cursor: pointer;
   color: #6b7280;
   padding: 4px 6px;
@@ -51,17 +89,25 @@
 .appshell-nav {
   flex: 1;
   overflow-y: auto;
-  padding: 12px;
+  overflow-x: hidden;
+  padding: 12px 12px;
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
+.appshell-sidebar--collapsed .appshell-nav { padding: 12px 10px; align-items: stretch; }
+
+/* Scrollbar polish */
+.appshell-nav::-webkit-scrollbar { width: 6px; }
+.appshell-nav::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 3px; }
+.appshell-nav::-webkit-scrollbar-thumb:hover { background: #d1d5db; }
 
 .appshell-nav-link {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 12px;
+  gap: 11px;
+  padding: 9px 12px;
   border-radius: 8px;
   font-size: 0.85rem;
   font-weight: 500;
@@ -70,13 +116,54 @@
   transition: background 0.12s, color 0.12s;
 }
 .appshell-nav-link:hover { background: #f3f4f6; color: #111827; }
-.appshell-nav-link--active { background: #f0fdf4 !important; color: #15803d !important; font-weight: 600; }
 
-/* ── Collapsible nav groups ──────────────────────────────────────── */
+/* Active state + left accent bar */
+.appshell-nav-link--active {
+  background: #f0fdf4 !important;
+  color: #15803d !important;
+  font-weight: 600;
+}
+.appshell-nav-link--active::before {
+  content: "";
+  position: absolute;
+  left: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 60%;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: #16a34a;
+}
+
+/* Collapsed mode: hide all text, show icons only */
+.appshell-sidebar--collapsed .appshell-nav-label,
+.appshell-sidebar--collapsed .appshell-logo-text,
+.appshell-sidebar--collapsed .appshell-user-card-info {
+  display: none;
+}
+
+/* Collapsed links: center the icon, hide accent offset */
+.appshell-sidebar--collapsed .appshell-nav-link {
+  justify-content: center;
+  padding: 10px;
+  gap: 0;
+}
+.appshell-sidebar--collapsed .appshell-nav-link--active::before { left: -10px; }
+.appshell-sidebar--collapsed .appshell-nav-sublink { padding-left: 10px; }
+
+/* Divider between groups in collapsed mode */
+.appshell-nav-collapsed-group { display: flex; flex-direction: column; gap: 2px; }
+.appshell-nav-divider {
+  height: 1px;
+  background: #f3f4f6;
+  margin: 6px 8px;
+}
+
+/* ── Collapsible nav groups (expanded mode) ──────────────────────── */
 .appshell-nav-group {
   display: flex;
   flex-direction: column;
-  margin-top: 4px;
+  margin-top: 6px;
 }
 
 .appshell-nav-group-header {
@@ -89,14 +176,14 @@
   border: none;
   cursor: pointer;
   border-radius: 8px;
-  color: #6b7280;
-  font-size: 0.7rem;
+  color: #9ca3af;
+  font-size: 0.68rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
   transition: background 0.12s, color 0.12s;
 }
-.appshell-nav-group-header:hover { background: #f9fafb; color: #374151; }
+.appshell-nav-group-header:hover { background: #f9fafb; color: #4b5563; }
 
 .appshell-nav-group-title {
   display: flex;
@@ -105,7 +192,6 @@
 }
 
 .appshell-chevron {
-  font-size: 0.7rem;
   transition: transform 0.18s ease;
   color: #9ca3af;
 }
@@ -120,16 +206,51 @@
 
 /* Sub-links sit slightly indented under their group header. */
 .appshell-nav-sublink {
-  padding-left: 20px;
+  padding-left: 22px;
   font-size: 0.83rem;
 }
 
-.appshell-sidebar-footer {
-  padding: 12px 16px;
-  font-size: 0.7rem;
-  color: #9ca3af;
+/* ── User profile card (sidebar footer) ──────────────────────────── */
+.appshell-user-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
   border-top: 1px solid #f3f4f6;
   flex-shrink: 0;
+}
+.appshell-sidebar--collapsed .appshell-user-card { justify-content: center; padding: 12px 8px; }
+
+.appshell-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #10b981, #0d9488);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.appshell-user-card-info { overflow: hidden; }
+.appshell-user-card-name {
+  margin: 0;
+  font-size: 0.83rem;
+  font-weight: 600;
+  color: #1f2937;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.appshell-user-card-role {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #16a34a;
+  text-transform: capitalize;
 }
 
 /* ── Main area ───────────────────────────────────────────────────── */
@@ -154,9 +275,9 @@
 
 .appshell-hamburger {
   display: none; /* hidden on desktop */
+  align-items: center;
   background: none;
   border: none;
-  font-size: 1.35rem;
   cursor: pointer;
   color: #374151;
   padding: 4px 6px;
@@ -218,11 +339,14 @@
 }
 
 @media (max-width: 768px) {
-  .appshell-sidebar {
+  /* On mobile the sidebar is a full drawer, never the mini rail */
+  .appshell-sidebar,
+  .appshell-sidebar--collapsed {
     position: fixed;
     top: 0;
     left: 0;
     height: 100%;
+    width: 260px;
     transform: translateX(-100%);
     box-shadow: 4px 0 24px rgba(0, 0, 0, 0.12);
   }
@@ -231,12 +355,20 @@
     transform: translateX(0);
   }
 
+  /* Force expanded look inside the mobile drawer */
+  .appshell-sidebar--collapsed .appshell-logo-text,
+  .appshell-sidebar--collapsed .appshell-user-card-info { display: block; }
+  .appshell-sidebar--collapsed .appshell-nav-label { display: inline; }
+  .appshell-sidebar--collapsed .appshell-nav-link { justify-content: flex-start; padding: 9px 12px; gap: 11px; }
+
+  .appshell-collapse-btn { display: none !important; }
+
   .appshell-sidebar-close {
     display: block;
   }
 
   .appshell-hamburger {
-    display: block;
+    display: flex;
   }
 
   .appshell-overlay {

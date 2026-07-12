@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { FileSearch } from "lucide-react";
 import { api, getApiError } from "../../api/client";
 import { Button } from "../../components/ui/Button";
 
@@ -84,7 +85,9 @@ export default function AuditsPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">🔍 Audits Log</h1>
+          <h1 className="flex items-center gap-2 text-2xl font-bold text-gray-900">
+            <FileSearch className="text-green-600" /> Audits Log
+          </h1>
           <p className="text-sm text-gray-500">Record of internal and external compliance audits for all departments.</p>
         </div>
         <Button onClick={() => setShowModal(true)}>+ Log Audit</Button>
@@ -181,9 +184,9 @@ export default function AuditsPage() {
                     onChange={(e) => setForm(f => ({ ...f, rating: e.target.value }))}
                     className="mt-1 w-full rounded border px-2 py-1.5 text-sm"
                   >
-                    <option value="EXCELLENT">🏆 EXCELLENT</option>
-                    <option value="SATISFACTORY">✅ SATISFACTORY</option>
-                    <option value="NEEDS_IMPROVEMENT">⚠️ NEEDS IMPROVEMENT</option>
+                    <option value="EXCELLENT">EXCELLENT</option>
+                    <option value="SATISFACTORY">SATISFACTORY</option>
+                    <option value="NEEDS_IMPROVEMENT">NEEDS IMPROVEMENT</option>
                   </select>
                 </div>
                 <div>

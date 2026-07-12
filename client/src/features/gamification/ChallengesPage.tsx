@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
+import { Target, Zap, Gift } from "lucide-react";
 import { api, getApiError } from "../../api/client";
 import { useAuth } from "../../store/AuthContext";
 import { Button } from "../../components/ui/Button";
@@ -103,7 +104,9 @@ export default function ChallengesPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">🎯 ESG Challenges</h1>
+          <h1 className="flex items-center gap-2 text-2xl font-bold text-gray-900">
+            <Target className="text-green-600" /> ESG Challenges
+          </h1>
           <p className="text-sm text-gray-500">Corporate targets and seasonal green challenges. Join to earn badges & points.</p>
         </div>
         {isElevated && <Button onClick={() => setShowModal(true)}>+ Add Challenge</Button>}
@@ -130,8 +133,8 @@ export default function ChallengesPage() {
                   <h3 className="text-base font-semibold text-gray-900 mt-2">{c.title}</h3>
                   <p className="text-xs text-gray-500 mt-1 line-clamp-3">{c.description}</p>
                   <div className="mt-4 flex gap-2">
-                    <span className="bg-green-50 text-green-700 text-[10px] px-2 py-0.5 rounded font-semibold">⚡ {c.xpReward} XP</span>
-                    <span className="bg-amber-50 text-amber-700 text-[10px] px-2 py-0.5 rounded font-semibold">🎁 {c.pointsReward} Pts</span>
+                    <span className="inline-flex items-center gap-1 bg-green-50 text-green-700 text-[10px] px-2 py-0.5 rounded font-semibold"><Zap size={11} /> {c.xpReward} XP</span>
+                    <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-700 text-[10px] px-2 py-0.5 rounded font-semibold"><Gift size={11} /> {c.pointsReward} Pts</span>
                   </div>
                 </div>
 

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Globe, ShoppingCart, Factory, CreditCard, Truck, BarChart3, type LucideIcon } from "lucide-react";
 import { api, getApiError } from "../../api/client";
 
 interface DeptEmissions {
@@ -36,11 +37,11 @@ interface DashboardData {
   goalProgress: GoalProgress[];
 }
 
-const TYPE_ICON: Record<string, string> = {
-  PURCHASE: "🛒",
-  MANUFACTURING: "🏭",
-  EXPENSE: "💳",
-  FLEET: "🚛",
+const TYPE_ICON: Record<string, LucideIcon> = {
+  PURCHASE: ShoppingCart,
+  MANUFACTURING: Factory,
+  EXPENSE: CreditCard,
+  FLEET: Truck,
 };
 
 const STATUS_STYLE: Record<string, string> = {
@@ -80,7 +81,9 @@ export default function EnvironmentalDashboardPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">🌍 Environmental Dashboard</h1>
+        <h1 className="flex items-center gap-2 text-2xl font-bold text-gray-900">
+          <Globe className="text-green-600" /> Environmental Dashboard
+        </h1>
         <p className="text-sm text-gray-500 mt-1">Carbon footprint tracking and environmental goals progress.</p>
       </div>
 
@@ -93,16 +96,19 @@ export default function EnvironmentalDashboardPage() {
           </p>
           <p className="text-xs text-gray-400 mt-0.5">kgCO₂e</p>
         </div>
-        {data.byType.map((t) => (
+        {data.byType.map((t) => {
+          const TypeIcon = TYPE_ICON[t.type] ?? BarChart3;
+          return (
           <div key={t.type} className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
-            <p className="text-xl">{TYPE_ICON[t.type] ?? "📊"}</p>
+            <TypeIcon size={22} className="text-green-600" />
             <p className="text-xs font-medium uppercase tracking-wide text-gray-400 mt-1">
               {t.type.toLowerCase().replace("_", " ")}
             </p>
             <p className="text-2xl font-bold text-gray-900">{t.count}</p>
             <p className="text-xs text-gray-400">records</p>
           </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">

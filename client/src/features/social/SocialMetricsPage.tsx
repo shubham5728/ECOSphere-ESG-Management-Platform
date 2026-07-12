@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { BarChart3 } from "lucide-react";
 import { api, getApiError } from "../../api/client";
 import { Button } from "../../components/ui/Button";
 
@@ -83,7 +84,9 @@ export default function SocialMetricsPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">📊 Social Metrics</h1>
+          <h1 className="flex items-center gap-2 text-2xl font-bold text-gray-900">
+            <BarChart3 className="text-green-600" /> Social Metrics
+          </h1>
           <p className="text-sm text-gray-500">Record and report social metrics like training hours and diversity rates.</p>
         </div>
         <Button onClick={() => setShowModal(true)}>+ Add Social Metric</Button>

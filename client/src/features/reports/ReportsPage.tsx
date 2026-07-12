@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { BarChart3, Download, Printer } from "lucide-react";
 import { api, getApiError } from "../../api/client";
 import { Button } from "../../components/ui/Button";
 
@@ -86,7 +87,9 @@ export default function ReportsPage() {
     <div className="space-y-6 print:p-0 print:space-y-4">
       <div className="flex items-center justify-between print:hidden">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">📊 Custom ESG Reports</h1>
+          <h1 className="flex items-center gap-2 text-2xl font-bold text-gray-900">
+            <BarChart3 className="text-green-600" /> Custom ESG Reports
+          </h1>
           <p className="text-sm text-gray-500">Query and generate print-ready reports for all Environmental, Social, and Governance metrics.</p>
         </div>
       </div>
@@ -101,10 +104,10 @@ export default function ReportsPage() {
               onChange={(e) => setForm(f => ({ ...f, module: e.target.value }))}
               className="mt-1 w-full rounded border px-2 py-1.5 text-sm"
             >
-              <option value="SUMMARY">📑 Summary Report</option>
-              <option value="ENVIRONMENTAL">🌳 Environmental Details</option>
-              <option value="SOCIAL">👥 Social Indicators</option>
-              <option value="GOVERNANCE">⚖️ Governance Logs</option>
+              <option value="SUMMARY">Summary Report</option>
+              <option value="ENVIRONMENTAL">Environmental Details</option>
+              <option value="SOCIAL">Social Indicators</option>
+              <option value="GOVERNANCE">Governance Logs</option>
             </select>
           </div>
           <div>
@@ -155,15 +158,15 @@ export default function ReportsPage() {
             <div className="flex gap-2 print:hidden">
               <button
                 onClick={handleExportCSV}
-                className="rounded border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600 hover:bg-gray-50"
+                className="flex items-center gap-1.5 rounded border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600 hover:bg-gray-50"
               >
-                📥 Export CSV
+                <Download size={14} /> Export CSV
               </button>
               <button
                 onClick={handlePrint}
-                className="rounded bg-brand-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-700"
+                className="flex items-center gap-1.5 rounded bg-brand-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-700"
               >
-                🖨️ Print Report
+                <Printer size={14} /> Print Report
               </button>
             </div>
           </div>

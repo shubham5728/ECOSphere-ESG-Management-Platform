@@ -1,3 +1,4 @@
+import { Award } from "lucide-react";
 import type { LeaderEntry } from "../data/mockData";
 
 const RANK_STYLE: Record<number, string> = {
@@ -28,7 +29,7 @@ export function LeaderboardTable({ entries }: LeaderboardTableProps) {
             <th className="py-2 text-left">Employee</th>
             <th className="py-2 text-right">XP</th>
             <th className="py-2 text-right">Points</th>
-            <th className="py-2 text-right">🏅</th>
+            <th className="py-2"><Award size={14} className="ml-auto text-amber-500" /></th>
           </tr>
         </thead>
         <tbody>

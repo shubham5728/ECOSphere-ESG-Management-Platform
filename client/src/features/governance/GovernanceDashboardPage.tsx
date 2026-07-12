@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Scale, ScrollText, FileSearch, ShieldAlert, Siren, type LucideIcon } from "lucide-react";
 import { api, getApiError } from "../../api/client";
 
 interface Summary {
@@ -50,25 +51,30 @@ export default function GovernanceDashboardPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">⚖️ Governance Dashboard</h1>
+        <h1 className="flex items-center gap-2 text-2xl font-bold text-gray-900">
+          <Scale className="text-green-600" /> Governance Dashboard
+        </h1>
         <p className="text-sm text-gray-500 mt-1">ESG Policy acknowledgement tracking, internal audits, and compliance issues.</p>
       </div>
 
       {/* Overview Cards */}
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        {[
-          { label: "Policy Coverage", value: `${data.summary.policyCoverageRatePct}%`, icon: "📜", desc: "Ack rate across staff" },
-          { label: "Audit Rating", value: data.summary.avgAuditScore > 0 ? `${data.summary.avgAuditScore}/100` : "N/A", icon: "🔍", desc: "Average audit score" },
-          { label: "Open Issues", value: data.summary.openIssues + data.summary.inProgressIssues, icon: "⚠️", desc: `${data.summary.resolvedIssues} resolved` },
-          { label: "Overdue Issues", value: data.summary.overdueIssues, icon: "🚨", desc: "Past deadline date", isAlert: data.summary.overdueIssues > 0 }
-        ].map((c, i) => (
+        {([
+          { label: "Policy Coverage", value: `${data.summary.policyCoverageRatePct}%`, icon: ScrollText, color: "text-blue-600", desc: "Ack rate across staff" },
+          { label: "Audit Rating", value: data.summary.avgAuditScore > 0 ? `${data.summary.avgAuditScore}/100` : "N/A", icon: FileSearch, color: "text-teal-600", desc: "Average audit score" },
+          { label: "Open Issues", value: data.summary.openIssues + data.summary.inProgressIssues, icon: ShieldAlert, color: "text-amber-600", desc: `${data.summary.resolvedIssues} resolved` },
+          { label: "Overdue Issues", value: data.summary.overdueIssues, icon: Siren, color: "text-red-600", desc: "Past deadline date", isAlert: data.summary.overdueIssues > 0 }
+        ] as { label: string; value: string | number; icon: LucideIcon; color: string; desc: string; isAlert?: boolean }[]).map((c, i) => {
+          const Icon = c.icon;
+          return (
           <div key={i} className={`rounded-xl border p-4 shadow-sm bg-white ${c.isAlert ? "border-red-200 bg-red-50/20" : "border-gray-100"}`}>
-            <div className="text-xl">{c.icon}</div>
+            <Icon size={22} className={c.color} />
             <p className="mt-1 text-xs text-gray-400 font-medium uppercase">{c.label}</p>
             <p className={`text-lg font-bold mt-0.5 ${c.isAlert ? "text-red-600" : "text-gray-900"}`}>{c.value}</p>
             <p className="text-[10px] text-gray-400">{c.desc}</p>
           </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Recent Issues List */}

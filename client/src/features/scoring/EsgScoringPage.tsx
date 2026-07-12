@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Star } from "lucide-react";
 import { api, getApiError } from "../../api/client";
 
 interface CompanyScore {
@@ -55,7 +56,9 @@ export default function EsgScoringPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">⭐ ESG Scoring Engine</h1>
+        <h1 className="flex items-center gap-2 text-2xl font-bold text-gray-900">
+          <Star className="text-amber-500" /> ESG Scoring Engine
+        </h1>
         <p className="text-sm text-gray-500 mt-1">Real-time ESG scoring breakdown company-wide and across departments based on active ESG settings weightage.</p>
       </div>
 
@@ -124,7 +127,7 @@ export default function EsgScoringPage() {
                   <td className="py-3 font-semibold text-purple-600">{dept.govScore}</td>
                   <td className="py-3 font-bold text-lg text-brand-600">{dept.totalScore}</td>
                   <td className="py-3 text-xs text-gray-400">
-                    📉 {dept.breakdown.emissionsKg.toFixed(1)}kg CO₂ · 🎯 {dept.breakdown.goalCompletionRate}% Goals · 👥 {dept.breakdown.femaleRatioPct}% Female · 📚 {dept.breakdown.avgTrainingHours}h Training · ⚠️ {dept.breakdown.openComplianceIssues} Issues
+                    {dept.breakdown.emissionsKg.toFixed(1)}kg CO₂ · {dept.breakdown.goalCompletionRate}% Goals · {dept.breakdown.femaleRatioPct}% Female · {dept.breakdown.avgTrainingHours}h Training · {dept.breakdown.openComplianceIssues} Issues
                   </td>
                 </tr>
               ))}
