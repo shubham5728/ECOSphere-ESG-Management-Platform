@@ -56,14 +56,6 @@ export function HeroSection() {
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-green-50 via-white to-white"></div>
       
       <div className="mx-auto max-w-7xl px-6 lg:px-8 text-center">
-        {/* Announcement Pill */}
-        <div className="mb-8 flex justify-center">
-          <div className="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20 transition-all cursor-pointer bg-white/50 backdrop-blur-sm shadow-sm flex items-center gap-2">
-            <span className="flex h-2 w-2 rounded-full bg-green-500"></span>
-            EcoSphere Platform v2.0 is now live. <a href="#" className="font-semibold text-green-600"><span className="absolute inset-0" aria-hidden="true"></span>Read more <span aria-hidden="true">&rarr;</span></a>
-          </div>
-        </div>
-
         {/* Headlines */}
         <h1 className="mx-auto max-w-4xl text-5xl font-extrabold tracking-tight text-gray-900 sm:text-7xl">
           Sustainability management, <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-teal-500">simplified.</span>
@@ -71,23 +63,6 @@ export function HeroSection() {
         <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-gray-600">
           The all-in-one ESG platform to track carbon footprints, ensure governance compliance, and drive social impact through employee gamification.
         </p>
-
-        {/* CTA Buttons */}
-        <div className="mt-10 flex items-center justify-center gap-x-4">
-          <button
-            onClick={() => navigate("/signup")}
-            className="group flex items-center gap-2 rounded-full bg-gray-900 px-6 py-3 text-sm font-semibold text-white shadow-md hover:bg-gray-800 transition-all hover:shadow-lg hover:-translate-y-0.5"
-          >
-            Start your free trial
-            <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
-          </button>
-          <button
-            onClick={() => navigate("/login")}
-            className="rounded-full px-6 py-3 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-200 hover:bg-gray-50 transition-all"
-          >
-            Sign in
-          </button>
-        </div>
 
         {/* Dashboard Mockup / Preview */}
         <div className="mt-16 sm:mt-24 relative mx-auto max-w-5xl">
@@ -474,12 +449,6 @@ export function CtaSection() {
           Join leading companies using EcoSphere to track emissions, ensure compliance, and empower employees.
         </p>
         <div className="mt-10 flex items-center justify-center gap-x-4">
-          <button
-            onClick={() => navigate("/signup")}
-            className="rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-100 transition-all hover:scale-105"
-          >
-            Start for free
-          </button>
           <button
             onClick={() => navigate("/login")}
             className="rounded-full px-8 py-3.5 text-sm font-semibold text-white ring-1 ring-inset ring-white/20 hover:bg-white/10 transition-all"
