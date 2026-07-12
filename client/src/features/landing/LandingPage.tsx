@@ -48,7 +48,6 @@ export function Navbar() {
 }
 
 export function HeroSection() {
-  const navigate = useNavigate();
 
   return (
     <div className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">

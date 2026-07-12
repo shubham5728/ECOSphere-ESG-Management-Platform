@@ -88,7 +88,7 @@ export function createCrud(delegate: ModelDelegate, options: CrudOptions = {}) {
 
   async function create(req: Request, res: Response, next: NextFunction) {
     try {
-      const item = await delegate.create({ data: req.body });
+      const item = await delegate.create({ data: req.body, include });
       return sendSuccess(res, item, `${label} created successfully`, 201);
     } catch (err) {
       next(err);
@@ -100,6 +100,7 @@ export function createCrud(delegate: ModelDelegate, options: CrudOptions = {}) {
       const item = await delegate.update({
         where: { id: req.params.id },
         data: req.body,
+        include,
       });
       return sendSuccess(res, item, `${label} updated successfully`);
     } catch (err) {

@@ -10,8 +10,14 @@ export async function generateEsgReport(filters: {
   
   if (filters.startDate || filters.endDate) {
     whereClause.createdAt = {};
-    if (filters.startDate) whereClause.createdAt.gte = new Date(filters.startDate);
-    if (filters.endDate) whereClause.createdAt.lte = new Date(filters.endDate);
+    if (filters.startDate) {
+      whereClause.createdAt.gte = new Date(filters.startDate);
+    }
+    if (filters.endDate) {
+      const endDate = new Date(filters.endDate);
+      endDate.setUTCHours(23, 59, 59, 999);
+      whereClause.createdAt.lte = endDate;
+    }
   }
 
   // 1. Environmental Report
