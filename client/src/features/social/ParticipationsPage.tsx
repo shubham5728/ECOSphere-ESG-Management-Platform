@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { api, getApiError } from "../../api/client";
 import { useAuth } from "../../store/AuthContext";
-import { Button } from "../../components/ui/Button";
 
 interface Participation {
   id: string;
