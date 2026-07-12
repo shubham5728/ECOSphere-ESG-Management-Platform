@@ -5,6 +5,8 @@ import { AppShell } from "./components/layout/AppShell";
 import LoginPage from "./features/auth/LoginPage";
 import SignupPage from "./features/auth/SignupPage";
 import DashboardPage from "./features/dashboard/DashboardPage";
+import { MasterDataPage } from "./features/master/MasterDataPage";
+import { departmentsConfig } from "./features/master/configs/departments";
 
 export default function App() {
   return (
@@ -19,6 +21,16 @@ export default function App() {
           <Route element={<ProtectedRoute />}>
             <Route element={<AppShell />}>
               <Route path="/" element={<DashboardPage />} />
+            </Route>
+          </Route>
+
+          {/* Admin-only master data */}
+          <Route element={<ProtectedRoute roles={["ADMIN"]} />}>
+            <Route element={<AppShell />}>
+              <Route
+                path="/departments"
+                element={<MasterDataPage config={departmentsConfig} />}
+              />
             </Route>
           </Route>
 
