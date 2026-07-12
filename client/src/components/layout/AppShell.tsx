@@ -9,13 +9,18 @@ interface NavItem {
   roles?: Role[];
 }
 
-// Phase 1 + Phase 2 nav.
+// Phase 1 + Phase 2 + Phase 3 nav.
 const NAV: NavItem[] = [
   { label: "Dashboard", to: "/", icon: "📊" },
   // -- Phase 2: Environmental --
   { label: "Env Dashboard", to: "/environmental-dashboard", icon: "🌍" },
   { label: "Log Activities", to: "/operations", icon: "🏭" },
   { label: "Carbon Ledger", to: "/carbon-ledger", icon: "📋" },
+  // -- Phase 3: Social --
+  { label: "Social Dashboard", to: "/social-dashboard", icon: "🤝" },
+  { label: "CSR Activities", to: "/csr-activities", icon: "🌳" },
+  { label: "CSR Review", to: "/participations", icon: "📝" },
+  { label: "Social Metrics", to: "/social-metrics", icon: "📈" },
   // -- Master Data (Admin) --
   { label: "Departments", to: "/departments", icon: "🏢", roles: ["ADMIN"] },
   { label: "Categories", to: "/categories", icon: "🏷️", roles: ["ADMIN"] },
@@ -58,7 +63,7 @@ export function AppShell() {
           ))}
         </nav>
         <div className="border-t border-gray-100 p-3 text-xs text-gray-400">
-          Phase 2 · Environmental Module
+          Phase 3 · Social Module
         </div>
       </aside>
 

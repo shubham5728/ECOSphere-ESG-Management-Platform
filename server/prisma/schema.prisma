@@ -43,6 +43,12 @@ enum OperationalType {
   FLEET
 }
 
+enum ParticipationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 // ---------- Users & Org ----------
 model User {
   id                 String               @id @default(cuid())
@@ -57,6 +63,7 @@ model User {
   department         Department?          @relation("DepartmentMembers", fields: [departmentId], references: [id])
   headOf             Department?          @relation("DepartmentHead")
   operationalRecords OperationalRecord[]
+  participations     Participation[]
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
 }
@@ -74,6 +81,8 @@ model Department {
   goals              EnvironmentalGoal[]
   operationalRecords OperationalRecord[]
   carbonTransactions CarbonTransaction[]
+  csrActivities      CsrActivity[]
+  socialMetrics      SocialMetric[]
   employeeCount      Int                  @default(0)
   status             Status               @default(ACTIVE)
   createdAt          DateTime             @default(now())
@@ -192,6 +201,61 @@ model CarbonTransaction {
   recordedAt          DateTime           @default(now())
   createdAt           DateTime           @default(now())
   updatedAt           DateTime           @updatedAt
+}
+
+// ---------- Phase 3: Social ----------
+model CsrActivity {
+  id             String          @id @default(cuid())
+  title          String
+  description    String
+  categoryId     String?
+  startDate      DateTime
+  endDate        DateTime?
+  location       String?
+  maxParticipants Int?           
+  xpReward       Int             @default(50)
+  pointsReward   Int             @default(100)
+  departmentId   String?
+  department     Department?     @relation(fields: [departmentId], references: [id])
+  participations Participation[]
+  status         Status          @default(ACTIVE)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+}
+
+model Participation {
+  id            String              @id @default(cuid())
+  csrActivityId String
+  csrActivity   CsrActivity         @relation(fields: [csrActivityId], references: [id])
+  userId        String
+  user          User                @relation(fields: [userId], references: [id])
+  proofUrl      String?             // link or file path (evidence)
+  proofNote     String?             // description of proof
+  status        ParticipationStatus @default(PENDING)
+  reviewNote    String?             // reviewer comment
+  xpAwarded     Int                 @default(0)
+  pointsAwarded Int                 @default(0)
+  submittedAt   DateTime            @default(now())
+  reviewedAt    DateTime?
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  @@unique([csrActivityId, userId])
+}
+
+model SocialMetric {
+  id               String      @id @default(cuid())
+  departmentId     String
+  department       Department  @relation(fields: [departmentId], references: [id])
+  period           String      // e.g. "2024-Q1", "2024-H1"
+  totalEmployees   Int         @default(0)
+  femaleCount      Int         @default(0)
+  trainingHours    Float       @default(0)
+  safetyIncidents  Int         @default(0)
+  volunteerHours   Float       @default(0)
+  notes            String?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
 }
 
 // ---------- Settings (single row, id = 1) ----------

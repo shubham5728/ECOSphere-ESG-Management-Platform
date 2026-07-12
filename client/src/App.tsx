@@ -19,6 +19,10 @@ import SettingsPage from "./features/settings/SettingsPage";
 import EnvironmentalDashboardPage from "./features/environmental/EnvironmentalDashboardPage";
 import OperationsPage from "./features/environmental/OperationsPage";
 import CarbonLedgerPage from "./features/environmental/CarbonLedgerPage";
+import SocialDashboardPage from "./features/social/SocialDashboardPage";
+import CsrActivitiesPage from "./features/social/CsrActivitiesPage";
+import ParticipationsPage from "./features/social/ParticipationsPage";
+import SocialMetricsPage from "./features/social/SocialMetricsPage";
 
 export default function App() {
   return (
@@ -36,6 +40,10 @@ export default function App() {
               <Route path="/environmental-dashboard" element={<EnvironmentalDashboardPage />} />
               <Route path="/operations" element={<OperationsPage />} />
               <Route path="/carbon-ledger" element={<CarbonLedgerPage />} />
+              <Route path="/social-dashboard" element={<SocialDashboardPage />} />
+              <Route path="/csr-activities" element={<CsrActivitiesPage />} />
+              <Route path="/participations" element={<ParticipationsPage />} />
+              <Route path="/social-metrics" element={<SocialMetricsPage />} />
             </Route>
           </Route>
 
