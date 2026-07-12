@@ -68,6 +68,58 @@
 .appshell-nav-link:hover { background: #f3f4f6; color: #111827; }
 .appshell-nav-link--active { background: #f0fdf4 !important; color: #15803d !important; font-weight: 600; }
 
+/* ── Collapsible nav groups ──────────────────────────────────────── */
+.appshell-nav-group {
+  display: flex;
+  flex-direction: column;
+  margin-top: 4px;
+}
+
+.appshell-nav-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 8px 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  color: #6b7280;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  transition: background 0.12s, color 0.12s;
+}
+.appshell-nav-group-header:hover { background: #f9fafb; color: #374151; }
+
+.appshell-nav-group-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.appshell-chevron {
+  font-size: 0.7rem;
+  transition: transform 0.18s ease;
+  color: #9ca3af;
+}
+.appshell-chevron--open { transform: rotate(90deg); }
+
+.appshell-nav-group-items {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 2px 0 4px;
+}
+
+/* Sub-links sit slightly indented under their group header. */
+.appshell-nav-sublink {
+  padding-left: 20px;
+  font-size: 0.83rem;
+}
+
 .appshell-sidebar-footer {
   padding: 12px 16px;
   font-size: 0.7rem;
