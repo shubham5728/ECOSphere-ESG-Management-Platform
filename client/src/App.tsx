@@ -8,7 +8,17 @@ import DashboardPage from "./features/dashboard/DashboardPage";
 import { MasterDataPage } from "./features/master/MasterDataPage";
 import { departmentsConfig } from "./features/master/configs/departments";
 import { categoriesConfig } from "./features/master/configs/categories";
+import { usersConfig } from "./features/master/configs/users";
+import { emissionFactorsConfig } from "./features/master/configs/emissionFactors";
+import { esgPoliciesConfig } from "./features/master/configs/esgPolicies";
+import { badgesConfig } from "./features/master/configs/badges";
+import { rewardsConfig } from "./features/master/configs/rewards";
+import { productESGProfilesConfig } from "./features/master/configs/productESGProfiles";
+import { environmentalGoalsConfig } from "./features/master/configs/environmentalGoals";
 import SettingsPage from "./features/settings/SettingsPage";
+import EnvironmentalDashboardPage from "./features/environmental/EnvironmentalDashboardPage";
+import OperationsPage from "./features/environmental/OperationsPage";
+import CarbonLedgerPage from "./features/environmental/CarbonLedgerPage";
 
 export default function App() {
   return (
@@ -23,6 +33,9 @@ export default function App() {
           <Route element={<ProtectedRoute />}>
             <Route element={<AppShell />}>
               <Route path="/" element={<DashboardPage />} />
+              <Route path="/environmental-dashboard" element={<EnvironmentalDashboardPage />} />
+              <Route path="/operations" element={<OperationsPage />} />
+              <Route path="/carbon-ledger" element={<CarbonLedgerPage />} />
             </Route>
           </Route>
 
@@ -36,6 +49,34 @@ export default function App() {
               <Route
                 path="/categories"
                 element={<MasterDataPage config={categoriesConfig} />}
+              />
+              <Route
+                path="/users"
+                element={<MasterDataPage config={usersConfig} />}
+              />
+              <Route
+                path="/emission-factors"
+                element={<MasterDataPage config={emissionFactorsConfig} />}
+              />
+              <Route
+                path="/esg-policies"
+                element={<MasterDataPage config={esgPoliciesConfig} />}
+              />
+              <Route
+                path="/badges"
+                element={<MasterDataPage config={badgesConfig} />}
+              />
+              <Route
+                path="/rewards"
+                element={<MasterDataPage config={rewardsConfig} />}
+              />
+              <Route
+                path="/product-esg-profiles"
+                element={<MasterDataPage config={productESGProfilesConfig} />}
+              />
+              <Route
+                path="/environmental-goals"
+                element={<MasterDataPage config={environmentalGoalsConfig} />}
               />
               <Route path="/settings" element={<SettingsPage />} />
             </Route>

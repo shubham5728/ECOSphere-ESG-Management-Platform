@@ -9,12 +9,23 @@ interface NavItem {
   roles?: Role[];
 }
 
-// Phase 1 nav. Master-data links land here as those modules ship.
+// Phase 1 + Phase 2 nav.
 const NAV: NavItem[] = [
   { label: "Dashboard", to: "/", icon: "📊" },
+  // -- Phase 2: Environmental --
+  { label: "Env Dashboard", to: "/environmental-dashboard", icon: "🌍" },
+  { label: "Log Activities", to: "/operations", icon: "🏭" },
+  { label: "Carbon Ledger", to: "/carbon-ledger", icon: "📋" },
+  // -- Master Data (Admin) --
   { label: "Departments", to: "/departments", icon: "🏢", roles: ["ADMIN"] },
   { label: "Categories", to: "/categories", icon: "🏷️", roles: ["ADMIN"] },
   { label: "Users", to: "/users", icon: "👥", roles: ["ADMIN"] },
+  { label: "Emission Factors", to: "/emission-factors", icon: "⚡", roles: ["ADMIN"] },
+  { label: "ESG Policies", to: "/esg-policies", icon: "📜", roles: ["ADMIN"] },
+  { label: "Badges", to: "/badges", icon: "🏅", roles: ["ADMIN"] },
+  { label: "Rewards", to: "/rewards", icon: "🎁", roles: ["ADMIN"] },
+  { label: "Product ESG Profiles", to: "/product-esg-profiles", icon: "📦", roles: ["ADMIN"] },
+  { label: "Environmental Goals", to: "/environmental-goals", icon: "🎯", roles: ["ADMIN"] },
   { label: "Settings", to: "/settings", icon: "⚙️", roles: ["ADMIN"] },
 ];
 
@@ -47,7 +58,7 @@ export function AppShell() {
           ))}
         </nav>
         <div className="border-t border-gray-100 p-3 text-xs text-gray-400">
-          Phase 1 · Auth & Master Data
+          Phase 2 · Environmental Module
         </div>
       </aside>
 

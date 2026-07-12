@@ -36,38 +36,48 @@ enum UnlockRule {
   CHALLENGE_COUNT
 }
 
+enum OperationalType {
+  PURCHASE
+  MANUFACTURING
+  EXPENSE
+  FLEET
+}
+
 // ---------- Users & Org ----------
 model User {
-  id           String      @id @default(cuid())
-  name         String
-  email        String      @unique
-  passwordHash String
-  role         Role        @default(EMPLOYEE)
-  points       Int         @default(0)
-  xp           Int         @default(0)
-  status       Status      @default(ACTIVE)
-  departmentId String?
-  department   Department? @relation("DepartmentMembers", fields: [departmentId], references: [id])
-  headOf       Department? @relation("DepartmentHead")
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
+  id                 String               @id @default(cuid())
+  name               String
+  email              String               @unique
+  passwordHash       String
+  role               Role                 @default(EMPLOYEE)
+  points             Int                  @default(0)
+  xp                 Int                  @default(0)
+  status             Status               @default(ACTIVE)
+  departmentId       String?
+  department         Department?          @relation("DepartmentMembers", fields: [departmentId], references: [id])
+  headOf             Department?          @relation("DepartmentHead")
+  operationalRecords OperationalRecord[]
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
 }
 
 model Department {
-  id              String       @id @default(cuid())
-  name            String
-  code            String       @unique
-  headId          String?      @unique
-  head            User?        @relation("DepartmentHead", fields: [headId], references: [id])
-  parentId        String?
-  parent          Department?  @relation("DepartmentHierarchy", fields: [parentId], references: [id])
-  children        Department[] @relation("DepartmentHierarchy")
-  members         User[]       @relation("DepartmentMembers")
-  goals           EnvironmentalGoal[]
-  employeeCount   Int          @default(0)
-  status          Status       @default(ACTIVE)
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
+  id                 String               @id @default(cuid())
+  name               String
+  code               String               @unique
+  headId             String?              @unique
+  head               User?                @relation("DepartmentHead", fields: [headId], references: [id])
+  parentId           String?
+  parent             Department?          @relation("DepartmentHierarchy", fields: [parentId], references: [id])
+  children           Department[]         @relation("DepartmentHierarchy")
+  members            User[]               @relation("DepartmentMembers")
+  goals              EnvironmentalGoal[]
+  operationalRecords OperationalRecord[]
+  carbonTransactions CarbonTransaction[]
+  employeeCount      Int                  @default(0)
+  status             Status               @default(ACTIVE)
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
 }
 
 // ---------- Master Data ----------
@@ -81,14 +91,15 @@ model Category {
 }
 
 model EmissionFactor {
-  id        String   @id @default(cuid())
-  name      String
-  source    String // e.g. "Diesel", "Electricity"
-  unit      String // e.g. "litre", "kWh"
-  factor    Float // kgCO2 per unit
-  status    Status   @default(ACTIVE)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                 String              @id @default(cuid())
+  name               String
+  source             String // e.g. "Diesel", "Electricity"
+  unit               String // e.g. "litre", "kWh"
+  factor             Float // kgCO2 per unit
+  status             Status              @default(ACTIVE)
+  operationalRecords OperationalRecord[]
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
 }
 
 model ProductESGProfile {
@@ -152,14 +163,45 @@ model Reward {
   updatedAt      DateTime @updatedAt
 }
 
+// ---------- Phase 2: Environmental ----------
+model OperationalRecord {
+  id                String            @id @default(cuid())
+  type              OperationalType
+  description       String
+  quantity          Float             // amount of unit consumed
+  unit              String            // e.g. litres, kWh
+  emissionFactorId  String
+  emissionFactor    EmissionFactor    @relation(fields: [emissionFactorId], references: [id])
+  departmentId      String
+  department        Department        @relation(fields: [departmentId], references: [id])
+  userId            String
+  user              User              @relation(fields: [userId], references: [id])
+  carbonTransaction CarbonTransaction?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+}
+
+model CarbonTransaction {
+  id                  String             @id @default(cuid())
+  operationalRecordId String?            @unique
+  operationalRecord   OperationalRecord? @relation(fields: [operationalRecordId], references: [id])
+  description         String
+  emissions           Float              // kgCO2
+  departmentId        String
+  department          Department         @relation(fields: [departmentId], references: [id])
+  recordedAt          DateTime           @default(now())
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+}
+
 // ---------- Settings (single row, id = 1) ----------
 model Setting {
-  id              Int      @id @default(1)
-  autoEmission    Boolean  @default(false)
-  evidenceRequired Boolean @default(true)
-  badgeAutoAward  Boolean  @default(true)
-  weightEnv       Int      @default(40)
-  weightSocial    Int      @default(30)
-  weightGov       Int      @default(30)
-  updatedAt       DateTime @updatedAt
+  id               Int      @id @default(1)
+  autoEmission     Boolean  @default(false)
+  evidenceRequired Boolean  @default(true)
+  badgeAutoAward   Boolean  @default(true)
+  weightEnv        Int      @default(40)
+  weightSocial     Int      @default(30)
+  weightGov        Int      @default(30)
+  updatedAt        DateTime @updatedAt
 }

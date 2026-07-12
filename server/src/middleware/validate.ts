@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { AnyZodObject, ZodError } from "zod";
+import { z, ZodError } from "zod";
 
 type Source = "body" | "query" | "params";
 
@@ -7,7 +7,7 @@ type Source = "body" | "query" | "params";
  * Validate a request part against a Zod schema.
  * On success the parsed (typed/coerced) value replaces the original.
  */
-export function validate(schema: AnyZodObject, source: Source = "body") {
+export function validate(schema: z.ZodTypeAny, source: Source = "body") {
   return (req: Request, _res: Response, next: NextFunction) => {
     try {
       const parsed = schema.parse(req[source]);

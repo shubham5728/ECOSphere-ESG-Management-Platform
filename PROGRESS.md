@@ -51,11 +51,18 @@ If the DB is ever empty: `cd server && npx prisma migrate dev && npm run seed`
 - **Backend:** `server/src/modules/master/crud.factory.ts` — pass any Prisma model → full list/search/sort/paginate/get/create/update/delete.
 - **Frontend:** `DataTable`, `Pagination`, `Modal`, `EntityForm`, `useCrud` hook, generic `MasterDataPage`. New master module = **1 config file + 1 route line**.
 
-### Master data modules
+### Master data modules (100% complete)
 | Module | Backend | Frontend | Status |
 |--------|---------|----------|--------|
 | Departments | ✅ | ✅ | Done (hierarchy, head, status) |
 | Categories | ✅ | ✅ | Done (type: CSR/Challenge) |
+| Users | ✅ | ✅ | Done (custom password hashing and exclude hash) |
+| Emission Factors | ✅ | ✅ | Done (name, source, unit, factor, status) |
+| ESG Policies | ✅ | ✅ | Done (title, description, version, effectiveDate, status) |
+| Badges | ✅ | ✅ | Done (name, description, unlockRule, threshold, icon, status) |
+| Rewards | ✅ | ✅ | Done (name, description, pointsRequired, stock, status) |
+| Product ESG Profiles | ✅ | ✅ | Done (productName, category, carbonPerUnit, recyclablePct, notes, status) |
+| Environmental Goals | ✅ | ✅ | Done (title, description, targetValue, currentValue, unit, deadline, departmentId, status) |
 
 ### Settings (complete)
 - Singleton config row. Toggles: Auto Emission, Evidence Requirement, Badge Auto-Award.
@@ -63,43 +70,24 @@ If the DB is ever empty: `cd server && npx prisma migrate dev && npm run seed`
 
 ---
 
-## 4. What is LEFT to build (Phase 1 remainder)
+## 4. What is LEFT (Phase 1 complete · Phase 2 complete)
 
-Follow the **approved priority order**. Each master module below takes ~10 min using the reusable pattern.
-
-### 4a. Users management (NEXT) — Admin only
-- Backend: `server/src/modules/users/` — list/create/update(role,department)/delete. Reuse `crud.factory` but hide `passwordHash`, hash password on create.
-- Frontend: config with role + department (async select from `/departments`).
-- Route `/users` (Admin only). Sidebar link already exists.
-
-### 4b. Remaining master-data modules (pure pattern reuse)
-For EACH: create `server/src/modules/master/<name>/<name>.schema.ts` + `.routes.ts`, wire in `server/src/app.ts`, then `client/src/features/master/configs/<name>.tsx` + route in `client/src/App.tsx` + sidebar link in `AppShell.tsx`.
-
-| Module | Key fields |
-|--------|-----------|
-| Emission Factors | name, source, unit, factor (Float), status |
-| ESG Policies | title, description, version, effectiveDate, status |
-| Badges | name, description, unlockRule (XP_THRESHOLD/CHALLENGE_COUNT), threshold, icon, status |
-| Rewards | name, description, pointsRequired, stock, status |
-| Product ESG Profiles | productName, category, carbonPerUnit, recyclablePct, notes, status |
-| Environmental Goals | title, description, targetValue, currentValue, unit, deadline, departmentId, status |
-
-> All these models ALREADY EXIST in `server/prisma/schema.prisma` — no migration needed, just routes + configs.
+Phase 1 and Phase 2 are **100% complete, verified (tsc + runtime)**.
 
 ---
 
-## 5. FUTURE phases (post Phase 1)
+## 5. FUTURE phases
 
 From the hackathon brief (`EcoSphere ESG Management Platform.pdf`):
 
-- **Phase 2 — Environmental:** Carbon Transactions, Auto Emission Calculation (uses Settings toggle), department carbon tracking, goals progress, environmental dashboard.
-- **Phase 3 — Social:** CSR Activities, Employee Participation (proof upload + approval; Evidence Requirement toggle), diversity + training metrics.
+- **Phase 2 — Environmental ✅ DONE:** OperationalRecord + CarbonTransaction models, auto-emission calculation (linked to Settings toggle), `/environmental/dashboard` API with aggregations, frontend: Environmental Dashboard page, Operations log page, Carbon Ledger page. Also upgraded main Dashboard.
+- **Phase 3 — Social (NEXT):** CSR Activities, Employee Participation (proof upload + approval; Evidence Requirement toggle), diversity + training metrics.
 - **Phase 4 — Governance:** Policy Acknowledgements (+ reminders), Audits, Compliance Issues (mandatory Owner + Due Date, overdue flag).
 - **Phase 5 — Gamification:** Challenge lifecycle (Draft→Active→Under Review→Completed/Archived), Challenge Participation + XP, Badge auto-award engine, Reward redemption (spend points, stock check), Leaderboards.
 - **Phase 6 — Scoring Engine ⭐:** Env/Social/Gov scores per department → Department Total → Overall ESG Score (weighted by Settings). Highest-value feature.
-- **Phase 7 — Reports:** Environmental/Social/Governance/Summary reports + Custom Report Builder (filters: Department, Date Range, Module, Employee, Challenge, ESG Category) + export PDF/Excel/CSV.
-- **Phase 8 — Notifications & polish:** In-app notifications (compliance issue, approvals, policy reminders, badge unlocks), mobile-responsive pass, seed data.
-- **Optional AI (only if time):** Claude-powered report summary (no ML training needed). See conversation notes.
+- **Phase 7 — Reports:** Environmental/Social/Governance/Summary reports + Custom Report Builder + export PDF/Excel/CSV.
+- **Phase 8 — Notifications & polish:** In-app notifications, mobile-responsive pass, seed data.
+- **Optional AI (only if time):** Claude-powered report summary.
 
 ---
 
