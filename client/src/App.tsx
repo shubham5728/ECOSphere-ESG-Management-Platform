@@ -5,6 +5,7 @@ import { AppShell } from "./components/layout/AppShell";
 import LoginPage from "./features/auth/LoginPage";
 import SignupPage from "./features/auth/SignupPage";
 import DashboardPage from "./features/dashboard/DashboardPage";
+import LandingPage from "./features/landing/LandingPage";
 import { MasterDataPage } from "./features/master/MasterDataPage";
 import { departmentsConfig } from "./features/master/configs/departments";
 import { categoriesConfig } from "./features/master/configs/categories";
@@ -40,13 +41,14 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           {/* Public */}
+          <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
 
           {/* Protected (any authenticated user) */}
           <Route element={<ProtectedRoute />}>
             <Route element={<AppShell />}>
-              <Route path="/" element={<DashboardPage />} />
+              <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/environmental-dashboard" element={<EnvironmentalDashboardPage />} />
               <Route path="/operations" element={<OperationsPage />} />
               <Route path="/carbon-ledger" element={<CarbonLedgerPage />} />

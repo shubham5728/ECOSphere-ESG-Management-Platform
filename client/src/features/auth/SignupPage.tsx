@@ -38,7 +38,7 @@ export default function SignupPage() {
     setLoading(true);
     try {
       await signup(form.name.trim(), form.email.trim(), form.password);
-      navigate("/");
+      navigate("/dashboard");
     } catch (err) {
       setApiError(getApiError(err));
     } finally {

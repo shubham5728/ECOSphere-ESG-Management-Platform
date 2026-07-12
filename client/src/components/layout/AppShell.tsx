@@ -14,7 +14,7 @@ interface NavItem {
 
 // All nav items across phases
 const NAV: NavItem[] = [
-  { label: "Dashboard", to: "/", icon: "📊" },
+  { label: "Dashboard", to: "/dashboard", icon: "📊" },
   // -- Phase 2: Environmental --
   { label: "Env Dashboard", to: "/environmental-dashboard", icon: "🌍" },
   { label: "Log Activities", to: "/operations", icon: "🏭" },
@@ -89,7 +89,7 @@ export function AppShell() {
             <NavLink
               key={item.to}
               to={item.to}
-              end={item.to === "/"}
+              end={item.to === "/dashboard"}
               onClick={closeSidebar}
               className={({ isActive }) =>
                 `appshell-nav-link ${isActive ? "appshell-nav-link--active" : ""}`
