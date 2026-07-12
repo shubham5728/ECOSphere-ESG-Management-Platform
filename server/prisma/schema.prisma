@@ -1,0 +1,165 @@
+// EcoSphere ESG Platform - Prisma Schema (Phase 1)
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------- Enums ----------
+enum Role {
+  ADMIN
+  MANAGER
+  EMPLOYEE
+}
+
+enum Status {
+  ACTIVE
+  INACTIVE
+}
+
+enum CategoryType {
+  CSR_ACTIVITY
+  CHALLENGE
+}
+
+enum GoalStatus {
+  ON_TRACK
+  AT_RISK
+  COMPLETED
+}
+
+enum UnlockRule {
+  XP_THRESHOLD
+  CHALLENGE_COUNT
+}
+
+// ---------- Users & Org ----------
+model User {
+  id           String      @id @default(cuid())
+  name         String
+  email        String      @unique
+  passwordHash String
+  role         Role        @default(EMPLOYEE)
+  points       Int         @default(0)
+  xp           Int         @default(0)
+  status       Status      @default(ACTIVE)
+  departmentId String?
+  department   Department? @relation("DepartmentMembers", fields: [departmentId], references: [id])
+  headOf       Department? @relation("DepartmentHead")
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
+
+model Department {
+  id              String       @id @default(cuid())
+  name            String
+  code            String       @unique
+  headId          String?      @unique
+  head            User?        @relation("DepartmentHead", fields: [headId], references: [id])
+  parentId        String?
+  parent          Department?  @relation("DepartmentHierarchy", fields: [parentId], references: [id])
+  children        Department[] @relation("DepartmentHierarchy")
+  members         User[]       @relation("DepartmentMembers")
+  goals           EnvironmentalGoal[]
+  employeeCount   Int          @default(0)
+  status          Status       @default(ACTIVE)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+}
+
+// ---------- Master Data ----------
+model Category {
+  id        String       @id @default(cuid())
+  name      String
+  type      CategoryType
+  status    Status       @default(ACTIVE)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+model EmissionFactor {
+  id        String   @id @default(cuid())
+  name      String
+  source    String // e.g. "Diesel", "Electricity"
+  unit      String // e.g. "litre", "kWh"
+  factor    Float // kgCO2 per unit
+  status    Status   @default(ACTIVE)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ProductESGProfile {
+  id            String   @id @default(cuid())
+  productName   String
+  category      String
+  carbonPerUnit Float
+  recyclablePct Float?
+  notes         String?
+  status        Status   @default(ACTIVE)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model EnvironmentalGoal {
+  id           String      @id @default(cuid())
+  title        String
+  description  String?
+  targetValue  Float
+  currentValue Float       @default(0)
+  unit         String
+  deadline     DateTime?
+  departmentId String?
+  department   Department? @relation(fields: [departmentId], references: [id])
+  status       GoalStatus  @default(ON_TRACK)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
+
+model ESGPolicy {
+  id            String   @id @default(cuid())
+  title         String
+  description   String
+  version       String   @default("1.0")
+  effectiveDate DateTime @default(now())
+  status        Status   @default(ACTIVE)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Badge {
+  id          String     @id @default(cuid())
+  name        String
+  description String
+  unlockRule  UnlockRule
+  threshold   Int
+  icon        String     @default("🏅")
+  status      Status     @default(ACTIVE)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Reward {
+  id             String   @id @default(cuid())
+  name           String
+  description    String
+  pointsRequired Int
+  stock          Int      @default(0)
+  status         Status   @default(ACTIVE)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+// ---------- Settings (single row, id = 1) ----------
+model Setting {
+  id              Int      @id @default(1)
+  autoEmission    Boolean  @default(false)
+  evidenceRequired Boolean @default(true)
+  badgeAutoAward  Boolean  @default(true)
+  weightEnv       Int      @default(40)
+  weightSocial    Int      @default(30)
+  weightGov       Int      @default(30)
+  updatedAt       DateTime @updatedAt
+}
