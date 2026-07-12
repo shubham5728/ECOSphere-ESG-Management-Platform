@@ -1,16 +1,26 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  Bell,
+  Award,
+  CheckCircle2,
+  XCircle,
+  Lock,
+  ShieldAlert,
+  Gift,
+  type LucideIcon,
+} from "lucide-react";
 import { useNotifications } from "../../hooks/useNotifications";
 import "./NotificationBell.css";
 
-const TYPE_ICON: Record<string, string> = {
-  BADGE_AWARDED: "🏅",
-  CHALLENGE_APPROVED: "✅",
-  CHALLENGE_REJECTED: "❌",
-  CHALLENGE_CLOSED: "🔒",
-  COMPLIANCE_OVERDUE: "⚠️",
-  REWARD_REDEEMED: "🎁",
-  GENERAL: "🔔",
+const TYPE_ICON: Record<string, LucideIcon> = {
+  BADGE_AWARDED: Award,
+  CHALLENGE_APPROVED: CheckCircle2,
+  CHALLENGE_REJECTED: XCircle,
+  CHALLENGE_CLOSED: Lock,
+  COMPLIANCE_OVERDUE: ShieldAlert,
+  REWARD_REDEEMED: Gift,
+  GENERAL: Bell,
 };
 
 export function NotificationBell() {
@@ -49,7 +59,7 @@ export function NotificationBell() {
         onClick={() => setOpen((o) => !o)}
         aria-label={`Notifications – ${unreadCount} unread`}
       >
-        🔔
+        <Bell size={19} />
         {unreadCount > 0 && (
           <span className="notif-badge">{unreadCount > 99 ? "99+" : unreadCount}</span>
         )}
@@ -77,7 +87,10 @@ export function NotificationBell() {
                   onClick={() => handleClick(n)}
                 >
                   <span className="notif-item-icon">
-                    {TYPE_ICON[n.type] ?? "🔔"}
+                    {(() => {
+                      const Icon = TYPE_ICON[n.type] ?? Bell;
+                      return <Icon size={18} />;
+                    })()}
                   </span>
                   <div className="notif-item-body">
                     <p className="notif-item-title">{n.title}</p>

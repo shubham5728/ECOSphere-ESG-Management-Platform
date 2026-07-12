@@ -28,8 +28,12 @@
   flex-shrink: 0;
 }
 
-.appshell-logo-icon { font-size: 1.5rem; }
+.appshell-logo-icon { color: #16a34a; flex-shrink: 0; }
 .appshell-logo-text { font-size: 1.1rem; font-weight: 700; color: #111827; flex: 1; }
+
+/* Nav icons keep their size and never squish. */
+.appshell-nav-icon { flex-shrink: 0; color: currentColor; }
+.appshell-nav-group-icon { flex-shrink: 0; }
 
 /* Close button only visible on mobile */
 .appshell-sidebar-close {
@@ -186,6 +190,9 @@
 }
 
 .appshell-logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   padding: 6px 14px;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
