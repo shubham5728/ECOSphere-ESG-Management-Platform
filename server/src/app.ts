@@ -20,6 +20,7 @@ import governanceRoutes from "./modules/governance/governance.routes";
 import gamificationRoutes from "./modules/gamification/gamification.routes";
 import scoringRoutes from "./modules/scoring/scoring.routes";
 import reportsRoutes from "./modules/reports/reports.routes";
+import notificationsRoutes from "./modules/notifications/notifications.routes";
 
 export function createApp() {
   const app = express();
@@ -50,6 +51,7 @@ export function createApp() {
   app.use("/api/gamification", gamificationRoutes);
   app.use("/api/scoring", scoringRoutes);
   app.use("/api/reports", reportsRoutes);
+  app.use("/api/notifications", notificationsRoutes);
 
   // Fallbacks
   app.use(notFound);

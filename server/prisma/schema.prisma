@@ -1,4 +1,4 @@
-// EcoSphere ESG Platform - Prisma Schema (Phase 1)
+// EcoSphere ESG Platform - Prisma Schema (Phase 1 → Phase 8)
 generator client {
   provider = "prisma-client-js"
 }
@@ -63,6 +63,15 @@ enum ChallengeDifficulty {
   HARD
 }
 
+enum NotificationType {
+  BADGE_AWARDED
+  CHALLENGE_CLOSED
+  CHALLENGE_APPROVED
+  CHALLENGE_REJECTED
+  COMPLIANCE_OVERDUE
+  REWARD_REDEEMED
+  GENERAL
+}
 
 // ---------- Users & Org ----------
 model User {
@@ -84,6 +93,7 @@ model User {
   challengeSignups    ChallengeParticipation[]
   badges              UserBadge[]
   redemptions         RewardRedemption[]
+  notifications       Notification[]
   createdAt           DateTime               @default(now())
   updatedAt           DateTime               @updatedAt
 }
@@ -389,4 +399,17 @@ model Setting {
   weightSocial     Int      @default(30)
   weightGov        Int      @default(30)
   updatedAt        DateTime @updatedAt
+}
+
+// ---------- Phase 8: Notifications ----------
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id])
+  type      NotificationType @default(GENERAL)
+  title     String
+  message   String
+  isRead    Boolean          @default(false)
+  link      String?
+  createdAt DateTime         @default(now())
 }

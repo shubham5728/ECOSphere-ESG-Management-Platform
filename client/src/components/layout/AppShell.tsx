@@ -1,6 +1,9 @@
+import { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "../../store/AuthContext";
+import { NotificationBell } from "../notifications/NotificationBell";
 import type { Role } from "../../types";
+import "./AppShell.css";
 
 interface NavItem {
   label: string;
@@ -9,7 +12,7 @@ interface NavItem {
   roles?: Role[];
 }
 
-// Phase 1 + Phase 2 + Phase 3 + Phase 4 + Phase 5 nav.
+// All nav items across phases
 const NAV: NavItem[] = [
   { label: "Dashboard", to: "/", icon: "📊" },
   // -- Phase 2: Environmental --
@@ -50,25 +53,46 @@ const NAV: NavItem[] = [
 
 export function AppShell() {
   const { user, logout } = useAuth();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const items = NAV.filter((i) => !i.roles || (user && i.roles.includes(user.role)));
 
+  const closeSidebar = () => setSidebarOpen(false);
+
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="appshell-root">
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div
+          className="appshell-overlay"
+          onClick={closeSidebar}
+          aria-hidden="true"
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className="flex w-60 flex-col border-r border-gray-200 bg-white">
-        <div className="flex items-center gap-2 border-b border-gray-100 px-5 py-4">
-          <span className="text-2xl">🌱</span>
-          <span className="text-lg font-bold text-gray-900">EcoSphere</span>
+      <aside className={`appshell-sidebar ${sidebarOpen ? "appshell-sidebar--open" : ""}`}>
+        <div className="appshell-sidebar-header">
+          <span className="appshell-logo-icon">🌱</span>
+          <span className="appshell-logo-text">EcoSphere</span>
+          {/* Close button (mobile) */}
+          <button
+            className="appshell-sidebar-close"
+            onClick={closeSidebar}
+            aria-label="Close sidebar"
+          >
+            ✕
+          </button>
         </div>
-        <nav className="flex-1 space-y-1 p-3">
+
+        <nav className="appshell-nav">
           {items.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
               end={item.to === "/"}
+              onClick={closeSidebar}
               className={({ isActive }) =>
-                `flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition
-                ${isActive ? "bg-brand-50 text-brand-700" : "text-gray-600 hover:bg-gray-100"}`
+                `appshell-nav-link ${isActive ? "appshell-nav-link--active" : ""}`
               }
             >
               <span>{item.icon}</span>
@@ -76,31 +100,46 @@ export function AppShell() {
             </NavLink>
           ))}
         </nav>
-        <div className="border-t border-gray-100 p-3 text-xs text-gray-400">
-          Phase 7 · Reports Module
+
+        <div className="appshell-sidebar-footer">
+          Phase 8 · Notifications &amp; Polish
         </div>
       </aside>
 
-      {/* Main */}
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <header className="flex items-center justify-between border-b border-gray-200 bg-white px-6 py-3">
-          <div className="text-sm text-gray-500">ESG Management Platform</div>
-          <div className="flex items-center gap-3">
-            <div className="text-right">
-              <p className="text-sm font-medium text-gray-800">{user?.name}</p>
-              <span className="rounded-full bg-brand-50 px-2 py-0.5 text-xs font-medium text-brand-700">
-                {user?.role}
-              </span>
+      {/* Main content area */}
+      <div className="appshell-main">
+        {/* Top header */}
+        <header className="appshell-header">
+          {/* Hamburger (mobile) */}
+          <button
+            id="sidebar-toggle-btn"
+            className="appshell-hamburger"
+            onClick={() => setSidebarOpen(true)}
+            aria-label="Open navigation menu"
+          >
+            ☰
+          </button>
+          <div className="appshell-header-brand">ESG Management Platform</div>
+
+          <div className="appshell-header-right">
+            {/* Notification bell */}
+            <NotificationBell />
+
+            <div className="appshell-user-info">
+              <p className="appshell-user-name">{user?.name}</p>
+              <span className="appshell-user-role">{user?.role}</span>
             </div>
             <button
+              id="logout-btn"
               onClick={logout}
-              className="rounded-lg border border-gray-200 px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-50"
+              className="appshell-logout-btn"
             >
               Logout
             </button>
           </div>
         </header>
-        <main className="flex-1 overflow-y-auto p-6">
+
+        <main className="appshell-content">
           <Outlet />
         </main>
       </div>

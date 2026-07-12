@@ -1,0 +1,208 @@
+/* ── AppShell Layout ────────────────────────────────────────────── */
+.appshell-root {
+  display: flex;
+  height: 100vh;
+  background: #f9fafb;
+  overflow: hidden;
+}
+
+/* ── Sidebar ─────────────────────────────────────────────────────── */
+.appshell-sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 240px;
+  flex-shrink: 0;
+  background: #fff;
+  border-right: 1px solid #e5e7eb;
+  overflow: hidden;
+  transition: transform 0.25s ease;
+  z-index: 200;
+}
+
+.appshell-sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 20px;
+  border-bottom: 1px solid #f3f4f6;
+  flex-shrink: 0;
+}
+
+.appshell-logo-icon { font-size: 1.5rem; }
+.appshell-logo-text { font-size: 1.1rem; font-weight: 700; color: #111827; flex: 1; }
+
+/* Close button only visible on mobile */
+.appshell-sidebar-close {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #6b7280;
+  padding: 4px 6px;
+  border-radius: 6px;
+}
+.appshell-sidebar-close:hover { background: #f3f4f6; }
+
+.appshell-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.appshell-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #4b5563;
+  text-decoration: none;
+  transition: background 0.12s, color 0.12s;
+}
+.appshell-nav-link:hover { background: #f3f4f6; color: #111827; }
+.appshell-nav-link--active { background: #f0fdf4 !important; color: #15803d !important; font-weight: 600; }
+
+.appshell-sidebar-footer {
+  padding: 12px 16px;
+  font-size: 0.7rem;
+  color: #9ca3af;
+  border-top: 1px solid #f3f4f6;
+  flex-shrink: 0;
+}
+
+/* ── Main area ───────────────────────────────────────────────────── */
+.appshell-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* ── Header ──────────────────────────────────────────────────────── */
+.appshell-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 24px;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  flex-shrink: 0;
+}
+
+.appshell-hamburger {
+  display: none; /* hidden on desktop */
+  background: none;
+  border: none;
+  font-size: 1.35rem;
+  cursor: pointer;
+  color: #374151;
+  padding: 4px 6px;
+  border-radius: 6px;
+  line-height: 1;
+}
+.appshell-hamburger:hover { background: #f3f4f6; }
+
+.appshell-header-brand {
+  flex: 1;
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.appshell-header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.appshell-user-info { text-align: right; }
+.appshell-user-name { font-size: 0.85rem; font-weight: 600; color: #1f2937; margin: 0; }
+.appshell-user-role {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 500;
+  background: #f0fdf4;
+  color: #15803d;
+  border-radius: 999px;
+  padding: 1px 8px;
+}
+
+.appshell-logout-btn {
+  padding: 6px 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  color: #4b5563;
+  background: none;
+  cursor: pointer;
+  transition: background 0.12s;
+  white-space: nowrap;
+}
+.appshell-logout-btn:hover { background: #f9fafb; }
+
+/* ── Page content ────────────────────────────────────────────────── */
+.appshell-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+/* ── Mobile responsive (≤ 768px) ─────────────────────────────────── */
+.appshell-overlay {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .appshell-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    transform: translateX(-100%);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.12);
+  }
+
+  .appshell-sidebar--open {
+    transform: translateX(0);
+  }
+
+  .appshell-sidebar-close {
+    display: block;
+  }
+
+  .appshell-hamburger {
+    display: block;
+  }
+
+  .appshell-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 199;
+    animation: overlay-in 0.2s ease;
+  }
+
+  @keyframes overlay-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  .appshell-content {
+    padding: 16px;
+  }
+
+  .appshell-header {
+    padding: 10px 16px;
+  }
+
+  .appshell-user-info {
+    display: none; /* save space on mobile */
+  }
+}

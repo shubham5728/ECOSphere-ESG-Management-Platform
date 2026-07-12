@@ -1,5 +1,6 @@
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../middleware/errorHandler";
+import { createNotification } from "../notifications/notifications.service";
 
 /** Check and award badges based on user stats */
 export async function evaluateAndAwardBadges(userId: string) {
@@ -33,6 +34,14 @@ export async function evaluateAndAwardBadges(userId: string) {
         data: { userId, badgeId: badge.id },
       });
       newAwards.push(badge.name);
+      // Fire notification
+      createNotification({
+        userId,
+        type: "BADGE_AWARDED",
+        title: "🏅 Badge Unlocked!",
+        message: `Congratulations! You've earned the "${badge.name}" badge.`,
+        link: "/leaderboard",
+      }).catch(() => {});
     }
   }
   return newAwards;
@@ -112,6 +121,23 @@ export async function reviewChallengeParticipation(
   let newBadges: string[] = [];
   if (data.status === "APPROVED") {
     newBadges = await evaluateAndAwardBadges(participation.userId);
+    createNotification({
+      userId: participation.userId,
+      type: "CHALLENGE_APPROVED",
+      title: "✅ Challenge Approved!",
+      message: `Your submission for "${participation.challenge.title}" was approved. You earned ${xpAwarded} XP and ${pointsAwarded} points!`,
+      link: "/challenges",
+    }).catch(() => {});
+  } else {
+    createNotification({
+      userId: participation.userId,
+      type: "CHALLENGE_REJECTED",
+      title: "❌ Challenge Rejected",
+      message: `Your submission for "${participation.challenge.title}" was not approved.${
+        data.reviewNote ? ` Note: ${data.reviewNote}` : ""
+      }`,
+      link: "/challenges",
+    }).catch(() => {});
   }
 
   return { updated, newBadges };
@@ -147,6 +173,14 @@ export async function redeemReward(userId: string, rewardId: string) {
       data: { points: { decrement: reward.pointsRequired } },
     }),
   ]);
+
+  createNotification({
+    userId,
+    type: "REWARD_REDEEMED",
+    title: "🎁 Reward Redeemed!",
+    message: `You have redeemed "${reward.name}" for ${reward.pointsRequired} points. Enjoy!`,
+    link: "/rewards-store",
+  }).catch(() => {});
 
   return redemption;
 }
